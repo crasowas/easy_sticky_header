@@ -39,8 +39,8 @@ class StickyContainerWidget extends SingleChildRenderObjectWidget {
     Key? key,
     required this.index,
     this.visible = true,
-    required super.child,
-  }) : super(key: key);
+    required Widget child,
+  }) : super(key: key, child: child);
 
   @override
   RenderStickyContainer createRenderObject(BuildContext context) {
