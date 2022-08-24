@@ -4,34 +4,34 @@
 [![](https://img.shields.io/pub/v/easy_sticky_header.svg)](https://pub.dev/packages/easy_sticky_header)
 [![](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-## English | [中文](README-CN.md)
+## [English](README.md) | 中文
 
-An easy-to-use and powerful sticky header for any widget that supports scrolling.
+一个易用且功能强大的粘性头部组件库，适用于任何支持滚动的组件。
 
-## Features
+## 功能
 
-* Support widget for horizontal or vertical scrolling
-* Support widget for reverse scrolling
-* Allow dynamic building of header widget and support custom transition animation
-* Header widget can be non-sticky
-* Support infinite list
+* 支持水平或垂直方向滚动的组件
+* 支持反向滚动的组件
+* 允许动态构建头部组件，支持自定义过渡动画
+* 头部组件可以没有粘性
+* 支持无限列表
 
-## Usage
+## 用法
 
-Add dependency:
+添加依赖：
 
 ```yaml
 dependencies:
   easy_sticky_header: ^1.0.0
 ```
 
-Import package:
+导入包：
 
 ```dart
 import 'package:easy_sticky_header/easy_sticky_header.dart';
 ```
 
-Example:
+示例：
 
 ```dart
 class Example extends StatelessWidget {
@@ -75,24 +75,23 @@ class Example extends StatelessWidget {
 }
 ```
 
-For more features, please go to the [example project](./example) to see the details.
+想了解更多功能请前往[示例项目](./example)查看详情。
 
-## Screenshots
+## 截图
 
 |![](./screenshots/screenshot1.png)|![](./screenshots/screenshot2.gif)|![](./screenshots/screenshot3.gif)|
 |:---:|:---:|:---:|
 |![](./screenshots/screenshot4.gif)|![](./screenshots/screenshot5.gif)|![](./screenshots/screenshot6.gif)|
 
-## Contribution
+## 贡献
 
-You are welcome to contribute here 😄!
+欢迎你来为这里做出贡献 😄！
 
-You can open an [issue](https://github.com/crasowas/easy_sticky_header/issues), if you find a bug,
-or want a new feature.
+如果你发现bug或者想要新功能，可以提[issue](https://github.com/crasowas/easy_sticky_header/issues)。
 
-You can open up a PR, if you fixed a bug or implemented a new feature.
+如果你修复了bug或者实现了新功能，可以提PR。
 
-## License
+## 许可协议
 
 ```
 MIT License
