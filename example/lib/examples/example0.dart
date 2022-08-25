@@ -98,38 +98,5 @@ class _Example0State extends State<Example0> {
         ),
       ),
     );
-
-    // StickyHeader(
-    //   child: ListView.builder(
-    //     itemCount: 100,
-    //     itemBuilder: (context, index) {
-    //       if (index % 3 == 0) {
-    //         return StickyContainerWidget(
-    //           index: index,
-    //           child: Container(
-    //             color: Color.fromRGBO(Random().nextInt(256),
-    //                 Random().nextInt(256), Random().nextInt(256), 1),
-    //             padding: const EdgeInsets.only(left: 16.0),
-    //             alignment: Alignment.centerLeft,
-    //             width: double.infinity,
-    //             height: 50,
-    //             child: Text(
-    //               'Header #$index',
-    //               style: const TextStyle(
-    //                 color: Colors.white,
-    //                 fontSize: 16,
-    //               ),
-    //             ),
-    //           ),
-    //         );
-    //       }
-    //       return Container(
-    //         width: double.infinity,
-    //         height: 80,
-    //         color: Colors.white,
-    //       );
-    //     },
-    //   ),
-    // );
   }
 }

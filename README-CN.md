@@ -1,8 +1,10 @@
 # easy_sticky_header
 
-[![](https://img.shields.io/badge/platform-Flutter-blue.svg)](https://flutter.dev)
-[![](https://img.shields.io/pub/v/easy_sticky_header.svg)](https://pub.dev/packages/easy_sticky_header)
-[![](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![platform](https://img.shields.io/badge/platform-Flutter-blue.svg?logo=flutter)](https://flutter.dev)
+[![pub](https://img.shields.io/pub/v/easy_sticky_header.svg)](https://pub.dev/packages/easy_sticky_header)
+[![license](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![issues](https://img.shields.io/github/issues/crasowas/easy_sticky_header?logo=github)](https://github.com/crasowas/easy_sticky_header/issues)
+[![commits](https://img.shields.io/github/last-commit/crasowas/easy_sticky_header?logo=github)](https://github.com/crasowas/easy_sticky_header/commits)
 
 ## [English](README.md) | 中文
 
@@ -13,7 +15,8 @@
 * 支持水平或垂直方向滚动的组件
 * 支持反向滚动的组件
 * 允许动态构建头部组件，支持自定义过渡动画
-* 头部组件可以没有粘性
+* 头部组件可以动态改变粘性
+* 支持点击头部组件后置顶
 * 支持无限列表
 
 ## 用法

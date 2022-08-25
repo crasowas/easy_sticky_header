@@ -270,13 +270,33 @@ class StickyHeaderController extends ChangeNotifier {
   /// Usually no need to call, this is called to avoid problems in some cases.
   void clearStickyHeaderInfo() => _stickyHeaderInfoMap.clear();
 
-  /// Jump to the header widget of the specified index.
+  /// Jumps to the header widget of the specified index, adding a transition
+  /// animation compared to [jumpTo]. For the attention of [animateTo], please
+  /// also refer to the usage of [jumpTo].
+  bool animateTo(
+    int index, {
+    Duration? duration,
+    Curve? curve,
+  }) {
+    var stickyHeaderInfo = getStickyHeaderInfo(index);
+    if (stickyHeaderInfo != null) {
+      _scrollPosition?.animateTo(
+        stickyHeaderInfo.pixels,
+        duration: duration ?? const Duration(milliseconds: 500),
+        curve: curve ?? Curves.ease,
+      );
+      return true;
+    }
+    return false;
+  }
+
+  /// Jumps to the header widget of the specified index.
   ///
   /// Note that this jump operation is based on the [_stickyHeaderInfoMap]
   /// cache. If the header widget information of the specified index is not
   /// in the cache, no operation will be performed and false will be returned.
   bool jumpTo(int index) {
-    var stickyHeaderInfo = _stickyHeaderInfoMap[index];
+    var stickyHeaderInfo = getStickyHeaderInfo(index);
     if (stickyHeaderInfo != null) {
       _scrollPosition?.jumpTo(stickyHeaderInfo.pixels);
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {

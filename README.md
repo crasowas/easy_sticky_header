@@ -1,8 +1,10 @@
 # easy_sticky_header
 
-[![](https://img.shields.io/badge/platform-Flutter-blue.svg)](https://flutter.dev)
-[![](https://img.shields.io/pub/v/easy_sticky_header.svg)](https://pub.dev/packages/easy_sticky_header)
-[![](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![platform](https://img.shields.io/badge/platform-Flutter-blue.svg?logo=flutter)](https://flutter.dev)
+[![pub](https://img.shields.io/pub/v/easy_sticky_header.svg)](https://pub.dev/packages/easy_sticky_header)
+[![license](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![issues](https://img.shields.io/github/issues/crasowas/easy_sticky_header?logo=github)](https://github.com/crasowas/easy_sticky_header/issues)
+[![commits](https://img.shields.io/github/last-commit/crasowas/easy_sticky_header?logo=github)](https://github.com/crasowas/easy_sticky_header/commits)
 
 ## English | [中文](README-CN.md)
 
@@ -13,7 +15,8 @@ An easy-to-use and powerful sticky header for any widget that supports scrolling
 * Support widget for horizontal or vertical scrolling
 * Support widget for reverse scrolling
 * Allow dynamic building of header widget and support custom transition animation
-* Header widget can be non-sticky
+* Header widget can dynamically change stickiness
+* Support for scrolling to the top after the header widget is tapped
 * Support infinite list
 
 ## Usage

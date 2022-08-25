@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'examples/example0.dart';
 import 'examples/example1.dart';
+import 'examples/example10.dart';
 import 'examples/example2.dart';
 import 'examples/example3.dart';
 import 'examples/example4.dart';
@@ -95,8 +96,13 @@ class _MyHomePageState extends State<MyHomePage> {
             } else if (index == 11) {
               return _buildItem(
                   index,
-                  'Example 9 - Jump to the header of the specified index',
+                  'Example 9 - Scrolls to the top after the header widget is tapped',
                   () => _push(context, const Example9()));
+            } else if (index == 12) {
+              return _buildItem(
+                  index,
+                  'Example 10 - Jumps to the header widget of the specified index',
+                  () => _push(context, const Example10()));
             }
             return Container();
           },
@@ -112,7 +118,7 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.only(left: 16.0),
           alignment: Alignment.centerLeft,
           width: double.infinity,
-          height: 60,
+          height: 45,
           child: Text(
             title,
             style: const TextStyle(
