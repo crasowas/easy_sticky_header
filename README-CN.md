@@ -6,7 +6,7 @@
 [![issues](https://img.shields.io/github/issues/crasowas/easy_sticky_header?logo=github)](https://github.com/crasowas/easy_sticky_header/issues)
 [![commits](https://img.shields.io/github/last-commit/crasowas/easy_sticky_header?logo=github)](https://github.com/crasowas/easy_sticky_header/commits)
 
-## [English](README.md) | 中文
+## [English](https://github.com/crasowas/easy_sticky_header/blob/main/README.md) | 中文
 
 一个易用且功能强大的粘性头部组件库，适用于任何支持滚动的组件。
 
@@ -82,9 +82,9 @@ class Example extends StatelessWidget {
 
 ## 截图
 
-|![](./screenshots/screenshot1.png)|![](./screenshots/screenshot2.gif)|![](./screenshots/screenshot3.gif)|
+|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot1.png)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot2.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot3.gif)|
 |:---:|:---:|:---:|
-|![](./screenshots/screenshot4.gif)|![](./screenshots/screenshot5.gif)|![](./screenshots/screenshot6.gif)|
+|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot4.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot5.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot6.gif)|
 
 ## 贡献
 

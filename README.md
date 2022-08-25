@@ -6,7 +6,7 @@
 [![issues](https://img.shields.io/github/issues/crasowas/easy_sticky_header?logo=github)](https://github.com/crasowas/easy_sticky_header/issues)
 [![commits](https://img.shields.io/github/last-commit/crasowas/easy_sticky_header?logo=github)](https://github.com/crasowas/easy_sticky_header/commits)
 
-## English | [中文](README-CN.md)
+## English | [中文](https://github.com/crasowas/easy_sticky_header/blob/main/README-CN.md)
 
 An easy-to-use and powerful sticky header for any widget that supports scrolling.
 
@@ -82,9 +82,9 @@ For more features, please go to the [example project](./example) to see the deta
 
 ## Screenshots
 
-|![](./screenshots/screenshot1.png)|![](./screenshots/screenshot2.gif)|![](./screenshots/screenshot3.gif)|
+|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot1.png)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot2.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot3.gif)|
 |:---:|:---:|:---:|
-|![](./screenshots/screenshot4.gif)|![](./screenshots/screenshot5.gif)|![](./screenshots/screenshot6.gif)|
+|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot4.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot5.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot6.gif)|
 
 ## Contribution
 
