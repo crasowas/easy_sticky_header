@@ -36,7 +36,7 @@ class StickyHeaderController extends ChangeNotifier {
       <int, StickyHeaderInfo>{};
 
   /// Cache of sticky header information callbacks.
-  final List<StickyHeaderInfoCallback> _stickyHeaderCallbackList =
+  final List<StickyHeaderInfoCallback> _stickyHeaderInfoCallbackList =
       <StickyHeaderInfoCallback>[];
 
   double currentPixels = 0.0;
@@ -84,7 +84,7 @@ class StickyHeaderController extends ChangeNotifier {
   /// the sticky header widget based on the scroll position.
   void scrollListener() {
     currentPixels = _scrollPosition?.pixels ?? 0.0;
-    for (var callback in _stickyHeaderCallbackList) {
+    for (var callback in _stickyHeaderInfoCallbackList) {
       var stickyHeaderInfo = callback();
       _correctOffset(stickyHeaderInfo);
       _stickyHeaderInfoMap[stickyHeaderInfo.index] = stickyHeaderInfo;
@@ -254,13 +254,13 @@ class StickyHeaderController extends ChangeNotifier {
   /// * [RenderStickyContainer], which automatically add and remove callback
   ///   based on lifecycle.
   void addCallback(StickyHeaderInfoCallback callback) {
-    _stickyHeaderCallbackList.add(callback);
+    _stickyHeaderInfoCallbackList.add(callback);
   }
 
   /// When the header widget is detached from the widget tree, which will
   /// execute this method to remove its own callback to the list.
   void removeCallback(StickyHeaderInfoCallback callback) {
-    _stickyHeaderCallbackList.remove(callback);
+    _stickyHeaderInfoCallbackList.remove(callback);
   }
 
   /// Gets sticky header information from cache.

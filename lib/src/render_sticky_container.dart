@@ -18,6 +18,8 @@ class RenderStickyContainer extends RenderProxyBox {
   StickyHeaderController? _controller;
   int index;
   bool visible;
+  double? pixels;
+  bool performancePriority;
   Widget widget;
 
   double? _pixelsCache;
@@ -26,6 +28,8 @@ class RenderStickyContainer extends RenderProxyBox {
     required StickyHeaderController? controller,
     required this.index,
     required this.visible,
+    this.pixels,
+    required this.performancePriority,
     required this.widget,
   }) : _controller = controller;
 
@@ -59,9 +63,16 @@ class RenderStickyContainer extends RenderProxyBox {
   }
 
   double get _pixels {
-    _pixelsCache ??=
-        RenderAbstractViewport.of(this)?.getOffsetToReveal(this, 0.0).offset;
-    return _pixelsCache ?? 0;
+    if (pixels != null) {
+      return pixels ?? 0.0;
+    } else {
+      if (_pixelsCache == null || !performancePriority) {
+        _pixelsCache = RenderAbstractViewport.of(this)
+            ?.getOffsetToReveal(this, 0.0)
+            .offset;
+      }
+      return _pixelsCache ?? 0.0;
+    }
   }
 
   Offset get _offset {

@@ -36,10 +36,27 @@ class StickyContainerWidget extends SingleChildRenderObjectWidget {
   /// can be inserted between header widgets.
   final bool visible;
 
+  /// The exact pixels of the header widget.
+  ///
+  /// In the presence of exact pixels, setting this property can
+  /// optimize performance.
+  final double? pixels;
+
+  /// In some special usage scenarios, the offset obtained through
+  /// [getOffsetToReveal] has errors. If this property is set to false,
+  /// the offset will be obtained in real time without caching.
+  ///
+  /// Note that if it is not necessary, please use the default value of true,
+  /// otherwise the frame rate will be reduced. Also, if [pixels] is not null,
+  /// this property has no effect.
+  final bool performancePriority;
+
   const StickyContainerWidget({
     Key? key,
     required this.index,
     this.visible = true,
+    this.pixels,
+    this.performancePriority = true,
     required Widget child,
   }) : super(key: key, child: child);
 
@@ -49,6 +66,8 @@ class StickyContainerWidget extends SingleChildRenderObjectWidget {
       controller: _getController(context),
       index: index,
       visible: visible,
+      pixels: pixels,
+      performancePriority: performancePriority,
       widget: child ?? Container(),
     );
   }
@@ -60,6 +79,8 @@ class StickyContainerWidget extends SingleChildRenderObjectWidget {
       ..controller = _getController(context)
       ..index = index
       ..visible = visible
+      ..pixels = pixels
+      ..performancePriority = performancePriority
       ..widget = child ?? Container();
   }
 
@@ -69,6 +90,11 @@ class StickyContainerWidget extends SingleChildRenderObjectWidget {
     properties.add(DiagnosticsProperty<int>('index', index, defaultValue: 0));
     properties
         .add(DiagnosticsProperty<bool>('visible', visible, defaultValue: true));
+    properties
+        .add(DiagnosticsProperty<double>('pixels', pixels, defaultValue: null));
+    properties.add(DiagnosticsProperty<bool>(
+        'performancePriority', performancePriority,
+        defaultValue: true));
   }
 
   StickyHeaderController? _getController(BuildContext context) {

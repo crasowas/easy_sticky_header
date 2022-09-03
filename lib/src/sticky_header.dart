@@ -72,7 +72,7 @@ class StickyHeader extends StatefulWidget {
   /// by default.
   final ScrollController? scrollController;
 
-  /// This parameter must be set if the value of the [reverse] parameter
+  /// This property must be set if the value of the [reverse] property
   /// needs to be changed dynamically. Usually set to null by default.
   final bool? reverse;
 
