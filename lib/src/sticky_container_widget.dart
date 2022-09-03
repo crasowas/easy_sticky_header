@@ -4,6 +4,7 @@
 // that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'render_sticky_container.dart';
@@ -60,6 +61,14 @@ class StickyContainerWidget extends SingleChildRenderObjectWidget {
       ..index = index
       ..visible = visible
       ..widget = child ?? Container();
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<int>('index', index, defaultValue: 0));
+    properties
+        .add(DiagnosticsProperty<bool>('visible', visible, defaultValue: true));
   }
 
   StickyHeaderController? _getController(BuildContext context) {

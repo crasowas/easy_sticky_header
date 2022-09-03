@@ -4,6 +4,7 @@
 // that can be found in the LICENSE file or at
 // https://opensource.org/licenses/MIT.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'sticky_header_controller.dart';
@@ -27,6 +28,23 @@ class StickyHeaderWidget extends StatefulWidget {
 
   @override
   State<StickyHeaderWidget> createState() => _StickyHeaderWidgetState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<StickyHeaderController>(
+        'controller', controller,
+        defaultValue: null));
+    properties.add(DiagnosticsProperty<double>(
+        'currentPixels', controller.currentPixels,
+        defaultValue: 0.0));
+    properties.add(DiagnosticsProperty<Offset>(
+        'currentOffset', controller.currentOffset,
+        defaultValue: Offset.zero));
+    properties.add(DiagnosticsProperty<StickyHeaderInfo>(
+        'currentStickyHeaderInfo', controller.currentStickyHeaderInfo,
+        defaultValue: null));
+  }
 }
 
 class _StickyHeaderWidgetState extends State<StickyHeaderWidget>
