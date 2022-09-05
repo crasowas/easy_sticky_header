@@ -286,10 +286,13 @@ class StickyHeaderController extends ChangeNotifier {
   ///
   /// The `velocity` parameter indicates how many pixels to scroll per
   /// millisecond and is used to calculate the default animation duration.
-  /// This parameter has no effect if a duration is specified.
+  /// This parameter has no effect if a duration is specified. The value of
+  /// `velocity` must be greater than 0.0, else equal to 1.0.
   ///
   /// For a better user experience, it is recommended to set finding animation
-  /// curves in pairs.
+  /// curves in pairs. For example [Curves.easeIn] and [Curves.easeOut] are a
+  /// pair of animation curves that can be combined into a coherent animation
+  /// curve.
   void animateTo(
     int index, {
     double offset = 0.0,
@@ -304,11 +307,13 @@ class StickyHeaderController extends ChangeNotifier {
     var stickyHeaderInfo = getStickyHeaderInfo(index);
     if (stickyHeaderInfo != null) {
       var pixels = stickyHeaderInfo.pixels + offset;
-      _scrollPosition?.animateTo(
-        pixels,
-        duration: duration ?? _getDefaultDuration(pixels, velocity),
-        curve: curve ?? Curves.ease,
-      );
+      if (currentPixels != pixels) {
+        _scrollPosition?.animateTo(
+          pixels,
+          duration: duration ?? _getDefaultDuration(pixels, velocity),
+          curve: curve ?? Curves.ease,
+        );
+      }
     } else {
       findingTargetInfo = FindingTargetInfo(
         index: index,
@@ -331,18 +336,23 @@ class StickyHeaderController extends ChangeNotifier {
         }
       }
       var pixels = isForward ? getMaxScrollExtent : getMinScrollExtent;
-      _scrollPosition?.animateTo(
-        pixels,
-        duration: findingStartDuration ?? _getDefaultDuration(pixels, velocity),
-        curve: findingStartCurve ?? Curves.easeIn,
-      );
+      if (currentPixels != pixels) {
+        _scrollPosition?.animateTo(
+          pixels,
+          duration:
+              findingStartDuration ?? _getDefaultDuration(pixels, velocity),
+          curve: findingStartCurve ?? Curves.easeIn,
+        );
+      }
     }
   }
 
   /// Duration is calculated based on the number of pixels to scroll and
   /// the scroll velocity.
   Duration _getDefaultDuration(double pixels, double velocity) {
-    print(((pixels - currentPixels).abs() / velocity).floor() / 1000);
+    if (velocity <= 0.0) {
+      velocity = 1.0;
+    }
     return Duration(
       milliseconds: ((pixels - currentPixels).abs() / velocity).floor(),
     );
@@ -375,10 +385,13 @@ class StickyHeaderController extends ChangeNotifier {
   }) {
     var stickyHeaderInfo = getStickyHeaderInfo(index);
     if (stickyHeaderInfo != null) {
-      _scrollPosition?.jumpTo(stickyHeaderInfo.pixels + offset);
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        scrollListener();
-      });
+      var pixels = stickyHeaderInfo.pixels + offset;
+      if (currentPixels != pixels) {
+        _scrollPosition?.jumpTo(pixels);
+        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+          scrollListener();
+        });
+      }
       return true;
     }
     return false;
