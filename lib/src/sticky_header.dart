@@ -153,7 +153,15 @@ class _StickyHeaderState extends State<StickyHeader> {
         controller: controller,
         child: Stack(
           children: <Widget>[
-            widget.child,
+            NotificationListener<ScrollEndNotification>(
+              onNotification: (notification) {
+                // Abort if jumping to the header widget at the specified index
+                // is in progress.
+                controller.findingTargetInfo = null;
+                return false;
+              },
+              child: widget.child,
+            ),
             StickyHeaderWidget(
               controller: controller,
               spacing: widget.spacing,

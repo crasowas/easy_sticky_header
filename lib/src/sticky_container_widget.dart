@@ -26,7 +26,10 @@ typedef HeaderWidgetBuilder = Widget Function(
 ///
 /// Wrap a header widget with this widget to make the sticky effect take effect.
 class StickyContainerWidget extends SingleChildRenderObjectWidget {
-  /// Index of the header widget, require unique index
+  /// The index of the header widget, which requires a unique index and is
+  /// sorted from small to large, can be discontinuous.
+  ///
+  /// It is recommended to use the index provided by the scroll widget.
   final int index;
 
   /// If visible is false, the header widget will not be visible

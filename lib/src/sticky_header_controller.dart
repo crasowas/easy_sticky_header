@@ -74,6 +74,12 @@ class StickyHeaderController extends ChangeNotifier {
 
   double get getViewportDimension => _scrollPosition?.viewportDimension ?? 0.0;
 
+  double get getMaxScrollExtent => _scrollPosition?.maxScrollExtent ?? 0.0;
+
+  double get getMinScrollExtent => _scrollPosition?.minScrollExtent ?? 0.0;
+
+  FindingTargetInfo? findingTargetInfo;
+
   @override
   void dispose() {
     _scrollPosition?.removeListener(scrollListener);
@@ -119,6 +125,7 @@ class StickyHeaderController extends ChangeNotifier {
     if (useStickyAmount) {
       _calculateStickyAmount(stickyHeaderInfoList);
     }
+    _findHeaderWidget();
     // Update sticky header.
     notifyListeners();
   }
@@ -270,24 +277,89 @@ class StickyHeaderController extends ChangeNotifier {
   /// Usually no need to call, this is called to avoid problems in some cases.
   void clearStickyHeaderInfo() => _stickyHeaderInfoMap.clear();
 
-  /// Jumps to the header widget of the specified index, adding a transition
-  /// animation compared to [jumpTo]. For the attention of [animateTo], please
-  /// also refer to the usage of [jumpTo].
-  bool animateTo(
+  /// Jumps to the header widget of the specified index. Compared with [jumpTo],
+  /// a transition animation is added and it supports jumping to the header
+  /// widget that has not yet appeared.
+  ///
+  /// The find operation will be performed when the header widget of the
+  /// specified index has not yet appeared.
+  ///
+  /// The `velocity` parameter indicates how many pixels to scroll per
+  /// millisecond and is used to calculate the default animation duration.
+  /// This parameter has no effect if a duration is specified.
+  ///
+  /// For a better user experience, it is recommended to set finding animation
+  /// curves in pairs.
+  void animateTo(
     int index, {
+    double offset = 0.0,
+    double velocity = 1.0,
     Duration? duration,
     Curve? curve,
+    Duration? findingStartDuration,
+    Curve? findingStartCurve,
+    Duration? findingEndDuration,
+    Curve? findingEndCurve,
   }) {
     var stickyHeaderInfo = getStickyHeaderInfo(index);
     if (stickyHeaderInfo != null) {
+      var pixels = stickyHeaderInfo.pixels + offset;
       _scrollPosition?.animateTo(
-        stickyHeaderInfo.pixels,
-        duration: duration ?? const Duration(milliseconds: 500),
+        pixels,
+        duration: duration ?? _getDefaultDuration(pixels, velocity),
         curve: curve ?? Curves.ease,
       );
-      return true;
+    } else {
+      findingTargetInfo = FindingTargetInfo(
+        index: index,
+        offset: offset,
+        velocity: velocity,
+        duration: findingEndDuration,
+        curve: findingEndCurve ?? Curves.easeOut,
+      );
+      var isForward = true;
+      // Note that if [_stickyHeaderInfoMap] is empty, the current scrolling
+      // widget is considered to be at the starting position. If the
+      // [scrollController] or [reverse] properties of [StickyHeader] are
+      // dynamically updated, the [_stickyHeaderInfoMap] will be cleared,
+      // and the jump may fail.
+      if (_stickyHeaderInfoMap.isNotEmpty) {
+        var stickyHeaderInfoList = _stickyHeaderInfoMap.values.toList();
+        stickyHeaderInfoList.sort((a, b) => a.index.compareTo(b.index));
+        if (stickyHeaderInfoList.first.index > index) {
+          isForward = false;
+        }
+      }
+      var pixels = isForward ? getMaxScrollExtent : getMinScrollExtent;
+      _scrollPosition?.animateTo(
+        pixels,
+        duration: findingStartDuration ?? _getDefaultDuration(pixels, velocity),
+        curve: findingStartCurve ?? Curves.easeIn,
+      );
     }
-    return false;
+  }
+
+  /// Duration is calculated based on the number of pixels to scroll and
+  /// the scroll velocity.
+  Duration _getDefaultDuration(double pixels, double velocity) {
+    print(((pixels - currentPixels).abs() / velocity).floor() / 1000);
+    return Duration(
+      milliseconds: ((pixels - currentPixels).abs() / velocity).floor(),
+    );
+  }
+
+  /// Finds header widget.
+  void _findHeaderWidget() {
+    var target = findingTargetInfo;
+    if (target != null && getStickyHeaderInfo(target.index) != null) {
+      animateTo(
+        target.index,
+        offset: target.offset,
+        duration: target.duration,
+        curve: target.curve,
+      );
+      findingTargetInfo = null;
+    }
   }
 
   /// Jumps to the header widget of the specified index.
@@ -295,10 +367,15 @@ class StickyHeaderController extends ChangeNotifier {
   /// Note that this jump operation is based on the [_stickyHeaderInfoMap]
   /// cache. If the header widget information of the specified index is not
   /// in the cache, no operation will be performed and false will be returned.
-  bool jumpTo(int index) {
+  ///
+  /// It is recommended to use [animateTo].
+  bool jumpTo(
+    int index, {
+    double offset = 0.0,
+  }) {
     var stickyHeaderInfo = getStickyHeaderInfo(index);
     if (stickyHeaderInfo != null) {
-      _scrollPosition?.jumpTo(stickyHeaderInfo.pixels);
+      _scrollPosition?.jumpTo(stickyHeaderInfo.pixels + offset);
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         scrollListener();
       });
@@ -306,4 +383,21 @@ class StickyHeaderController extends ChangeNotifier {
     }
     return false;
   }
+}
+
+/// Finding Target Info.
+class FindingTargetInfo {
+  int index;
+  double offset;
+  double velocity;
+  Duration? duration;
+  Curve? curve;
+
+  FindingTargetInfo({
+    required this.index,
+    required this.offset,
+    required this.velocity,
+    this.duration,
+    this.curve,
+  });
 }
