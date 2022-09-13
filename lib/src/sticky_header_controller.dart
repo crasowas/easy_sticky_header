@@ -19,14 +19,11 @@ typedef StickyHeaderInfoCallback = StickyHeaderInfo Function();
 /// [StickyHeaderController] is the core of the library, its main feature is to
 /// monitor the scroll changes and calculate the sticky header. In addition to
 /// this, it also supports jumping the header widget of the specified index,
-/// see also [jumpTo].
+/// see also [animateTo].
 class StickyHeaderController extends ChangeNotifier {
   ScrollPosition? _scrollPosition;
-  bool useDefaultScrollPosition = true;
-
-  /// If [StickyContainerBuilder] is not used, the sticky amount
-  /// is not calculated by default.
-  bool useStickyAmount = false;
+  bool _isJumping = false;
+  FindingTargetInfo? _findingTargetInfo;
 
   /// Cache of sticky headers information.
   ///
@@ -39,20 +36,43 @@ class StickyHeaderController extends ChangeNotifier {
   final List<StickyHeaderInfoCallback> _stickyHeaderInfoCallbackList =
       <StickyHeaderInfoCallback>[];
 
+  /// When the default [ScrollController] is not used, the property value will
+  /// be set to false.
+  ///
+  /// Note that this property is only used internally, please do nothing.
+  bool useDefaultScrollPosition = true;
+
+  /// When the value of the [useStickyAmount] property is set to true, the
+  /// sticky amount of the header widget will be automatically calculated.
+  ///
+  /// This property is automatically set to true if [StickyContainerBuilder] is
+  /// used.
+  bool useStickyAmount = false;
+
+  /// Cache of pixel values for the current scroll position
   double currentPixels = 0.0;
 
   /// Current sticky header information.
   ///
   /// See also:
   ///
-  /// * [StickyHeaderWidget], which use this build widget.
+  /// * [StickyHeaderWidget], which uses this build sticky header.
   StickyHeaderInfo? currentStickyHeaderInfo;
+
+  /// Current child sticky header information.
+  ///
+  /// See also:
+  ///
+  /// * [StickyContainerGroupBuilder], which uses this to build parent header
+  ///   widget.
+  StickyHeaderInfo? currentChildStickyHeaderInfo;
 
   /// Current sticky header offset.
   ///
   /// See also:
   ///
-  /// * [StickyHeaderWidget], which use this to determine the widget position.
+  /// * [StickyHeaderWidget], which uses this to determine the sticky header
+  ///   position.
   Offset currentOffset = Offset.zero;
 
   set scrollPosition(ScrollPosition? newScrollPosition) {
@@ -66,6 +86,15 @@ class StickyHeaderController extends ChangeNotifier {
 
   ScrollPosition? get scrollPosition => _scrollPosition;
 
+  set isJumping(bool newValue) {
+    _isJumping = newValue;
+    if (!newValue) {
+      _findingTargetInfo = null;
+    }
+  }
+
+  bool get isJumping => _isJumping;
+
   bool get isReverse =>
       _scrollPosition?.axisDirection == AxisDirection.up ||
       _scrollPosition?.axisDirection == AxisDirection.left;
@@ -78,15 +107,13 @@ class StickyHeaderController extends ChangeNotifier {
 
   double get getMinScrollExtent => _scrollPosition?.minScrollExtent ?? 0.0;
 
-  FindingTargetInfo? findingTargetInfo;
-
   @override
   void dispose() {
     _scrollPosition?.removeListener(scrollListener);
     super.dispose();
   }
 
-  /// Monitor scroll changes and control the position and visibility of
+  /// Monitors scroll changes and control the position and visibility of
   /// the sticky header widget based on the scroll position.
   void scrollListener() {
     currentPixels = _scrollPosition?.pixels ?? 0.0;
@@ -100,21 +127,42 @@ class StickyHeaderController extends ChangeNotifier {
     stickyHeaderInfoList.sort((a, b) => a.index.compareTo(b.index));
     // Clear cache.
     currentStickyHeaderInfo = null;
+    currentChildStickyHeaderInfo = null;
     currentOffset = Offset.zero;
     // Find current sticky header and calculate offset.
     if (stickyHeaderInfoList.isNotEmpty &&
-        _isNeedStickyHeader(stickyHeaderInfoList)) {
+        _isNeedsStickyHeader(stickyHeaderInfoList)) {
       for (var i = 0; i < stickyHeaderInfoList.length; i++) {
         var stickyHeaderInfo = stickyHeaderInfoList[i];
         if (_isValidStickyHeader(stickyHeaderInfo)) {
+          var parentIndex = stickyHeaderInfo.parentIndex;
           if (i == stickyHeaderInfoList.length - 1) {
-            currentStickyHeaderInfo = stickyHeaderInfo;
+            if (parentIndex != null) {
+              currentStickyHeaderInfo = _stickyHeaderInfoMap[parentIndex];
+              currentChildStickyHeaderInfo = stickyHeaderInfo;
+            } else {
+              currentStickyHeaderInfo = stickyHeaderInfo;
+            }
             break;
           } else {
-            if (!_isValidStickyHeader(stickyHeaderInfoList[i + 1])) {
-              currentStickyHeaderInfo = stickyHeaderInfo;
-              currentOffset = _calculateOffset(
-                  stickyHeaderInfo, stickyHeaderInfoList[i + 1]);
+            var nextStickyHeaderInfo = stickyHeaderInfoList[i + 1];
+            if (!_isValidStickyHeader(nextStickyHeaderInfo)) {
+              if (parentIndex != null) {
+                currentStickyHeaderInfo = _stickyHeaderInfoMap[parentIndex];
+                currentChildStickyHeaderInfo = stickyHeaderInfo;
+                if (stickyHeaderInfo.parentIndex !=
+                    nextStickyHeaderInfo.parentIndex) {
+                  currentOffset =
+                      _calculateOffset(stickyHeaderInfo, nextStickyHeaderInfo);
+                }
+              } else {
+                currentStickyHeaderInfo = stickyHeaderInfo;
+                if (stickyHeaderInfo.index !=
+                    nextStickyHeaderInfo.parentIndex) {
+                  currentOffset =
+                      _calculateOffset(stickyHeaderInfo, nextStickyHeaderInfo);
+                }
+              }
               break;
             }
           }
@@ -130,7 +178,7 @@ class StickyHeaderController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Correct the deviation of offset.
+  /// Corrects the deviation of offset.
   ///
   /// If left untreated, the sticky header widget and the header widget
   /// will not fit together, and there will be gaps between the two, especially
@@ -154,7 +202,7 @@ class StickyHeaderController extends ChangeNotifier {
 
   /// In some cases sticky header is not required,
   /// e.g. scroll events triggered by [BouncingScrollPhysics].
-  bool _isNeedStickyHeader(List<StickyHeaderInfo> stickyHeaderInfoList) =>
+  bool _isNeedsStickyHeader(List<StickyHeaderInfo> stickyHeaderInfoList) =>
       isReverse
           ? currentPixels > 0
           : getComponent(stickyHeaderInfoList.first.offset) < 0;
@@ -169,18 +217,28 @@ class StickyHeaderController extends ChangeNotifier {
   /// * For scrolling widget that reverse the scrolling direction,
   ///   determine whether the header widget is partially or completely
   ///   outside the [viewportDimension] range.
+  ///
+  /// * For grouped header widgets, additional processing is required if the
+  ///   child header widget and parent header widget do not overlap.
   bool _isValidStickyHeader(StickyHeaderInfo stickyHeaderInfo) {
-    if (isReverse) {
-      return (getViewportDimension -
-              getDimension(stickyHeaderInfo.size) -
-              getComponent(stickyHeaderInfo.offset)) <
-          0.0;
-    } else {
-      return getComponent(stickyHeaderInfo.offset) < 0.0;
+    bool isValidStickyHeader = false;
+    var value = 0.0;
+    var parentIndex = stickyHeaderInfo.parentIndex;
+    if (parentIndex != null && !stickyHeaderInfo.overlapParent) {
+      value = getDimension(getStickyHeaderInfo(parentIndex)?.size);
     }
+    if (isReverse) {
+      isValidStickyHeader = getViewportDimension -
+              getDimension(stickyHeaderInfo.size) -
+              getComponent(stickyHeaderInfo.offset) <
+          value;
+    } else {
+      isValidStickyHeader = getComponent(stickyHeaderInfo.offset) < value;
+    }
+    return isValidStickyHeader;
   }
 
-  /// Calculate the offset at which the header widget should stuck to
+  /// Calculates the offset at which the header widget should stuck to
   /// the starting position.
   Offset _calculateOffset(StickyHeaderInfo stickyHeaderInfo,
       StickyHeaderInfo nextStickyHeaderInfo) {
@@ -206,30 +264,38 @@ class StickyHeaderController extends ChangeNotifier {
     if (isReverse &&
         currentStickyHeaderInfo != null &&
         currentOffset == Offset.zero) {
-      var d = getViewportDimension -
-          getDimension(currentStickyHeaderInfo?.size ?? Size.zero);
+      var d =
+          getViewportDimension - getDimension(currentStickyHeaderInfo?.size);
       currentOffset = isHorizontalAxis ? Offset(d, 0.0) : Offset(0.0, d);
     }
   }
 
-  /// [stickyAmount] is used to create header widget with varying styles.
+  /// The `stickyAmount` is used to create header widget with varying styles.
   void _calculateStickyAmount(List<StickyHeaderInfo> stickyHeaderInfoList) {
     int? nextStickyHeaderIndex;
     for (var i = 0; i < stickyHeaderInfoList.length; i++) {
       var stickyHeaderInfo = stickyHeaderInfoList[i];
       var stickyAmount = 0.0;
       if (!_isValidStickyHeader(stickyHeaderInfo)) {
+        var value = 0.0;
+        if (stickyHeaderInfo.parentIndex != null &&
+            !stickyHeaderInfo.overlapParent) {
+          value = getDimension(currentStickyHeaderInfo?.size);
+        }
         if (isReverse) {
           stickyAmount = (getViewportDimension -
                   getComponent(stickyHeaderInfo.offset) -
-                  getDimension(stickyHeaderInfo.size)) /
+                  getDimension(stickyHeaderInfo.size) -
+                  value) /
               getDimension(stickyHeaderInfo.size);
         } else {
-          stickyAmount = getComponent(stickyHeaderInfo.offset) /
+          stickyAmount = (getComponent(stickyHeaderInfo.offset) - value) /
               getDimension(stickyHeaderInfo.size);
         }
         stickyAmount = (1.0 - stickyAmount).clamp(0.0, 1.0);
-      } else if (stickyHeaderInfo == currentStickyHeaderInfo) {
+      } else if ((currentChildStickyHeaderInfo == null &&
+              stickyHeaderInfo == currentStickyHeaderInfo) ||
+          stickyHeaderInfo == currentChildStickyHeaderInfo) {
         nextStickyHeaderIndex =
             i < stickyHeaderInfoList.length - 1 ? i + 1 : null;
         stickyAmount = 1.0;
@@ -237,8 +303,13 @@ class StickyHeaderController extends ChangeNotifier {
       stickyHeaderInfo.stickyAmount = stickyAmount;
     }
     if (nextStickyHeaderIndex != null) {
-      currentStickyHeaderInfo?.stickyAmount -=
+      var stickyAmount =
           stickyHeaderInfoList[nextStickyHeaderIndex].stickyAmount;
+      if (currentChildStickyHeaderInfo != null) {
+        currentChildStickyHeaderInfo?.stickyAmount -= stickyAmount;
+      } else {
+        currentStickyHeaderInfo?.stickyAmount -= stickyAmount;
+      }
     }
   }
 
@@ -248,8 +319,10 @@ class StickyHeaderController extends ChangeNotifier {
       _scrollPosition?.axis == Axis.horizontal ? offset.dx : offset.dy;
 
   /// Gets the width or height based on scroll view's scroll axis.
-  double getDimension(Size size) =>
-      _scrollPosition?.axis == Axis.horizontal ? size.width : size.height;
+  double getDimension(Size? size) {
+    size ??= Size.zero;
+    return _scrollPosition?.axis == Axis.horizontal ? size.width : size.height;
+  }
 
   /// When the header widget is attached to the widget tree, which will execute
   /// this method to add its own callback to the list. When the page is
@@ -258,7 +331,7 @@ class StickyHeaderController extends ChangeNotifier {
   ///
   /// See also:
   ///
-  /// * [RenderStickyContainer], which automatically add and remove callback
+  /// * [RenderStickyContainer], which automatically adds and removes callback
   ///   based on lifecycle.
   void addCallback(StickyHeaderInfoCallback callback) {
     _stickyHeaderInfoCallbackList.add(callback);
@@ -306,8 +379,9 @@ class StickyHeaderController extends ChangeNotifier {
   }) {
     var stickyHeaderInfo = getStickyHeaderInfo(index);
     if (stickyHeaderInfo != null) {
-      var pixels = stickyHeaderInfo.pixels + offset;
+      var pixels = _calculatePixels(stickyHeaderInfo, offset);
       if (currentPixels != pixels) {
+        isJumping = true;
         _scrollPosition?.animateTo(
           pixels,
           duration: duration ?? _getDefaultDuration(pixels, velocity),
@@ -315,7 +389,7 @@ class StickyHeaderController extends ChangeNotifier {
         );
       }
     } else {
-      findingTargetInfo = FindingTargetInfo(
+      _findingTargetInfo = FindingTargetInfo(
         index: index,
         offset: offset,
         velocity: velocity,
@@ -337,6 +411,7 @@ class StickyHeaderController extends ChangeNotifier {
       }
       var pixels = isForward ? getMaxScrollExtent : getMinScrollExtent;
       if (currentPixels != pixels) {
+        isJumping = true;
         _scrollPosition?.animateTo(
           pixels,
           duration:
@@ -360,7 +435,7 @@ class StickyHeaderController extends ChangeNotifier {
 
   /// Finds header widget.
   void _findHeaderWidget() {
-    var target = findingTargetInfo;
+    var target = _findingTargetInfo;
     if (target != null && getStickyHeaderInfo(target.index) != null) {
       animateTo(
         target.index,
@@ -368,7 +443,7 @@ class StickyHeaderController extends ChangeNotifier {
         duration: target.duration,
         curve: target.curve,
       );
-      findingTargetInfo = null;
+      _findingTargetInfo = null;
     }
   }
 
@@ -385,7 +460,7 @@ class StickyHeaderController extends ChangeNotifier {
   }) {
     var stickyHeaderInfo = getStickyHeaderInfo(index);
     if (stickyHeaderInfo != null) {
-      var pixels = stickyHeaderInfo.pixels + offset;
+      var pixels = _calculatePixels(stickyHeaderInfo, offset);
       if (currentPixels != pixels) {
         _scrollPosition?.jumpTo(pixels);
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -395,6 +470,16 @@ class StickyHeaderController extends ChangeNotifier {
       return true;
     }
     return false;
+  }
+
+  /// Calculates the scroll position.
+  double _calculatePixels(StickyHeaderInfo stickyHeaderInfo, double offset) {
+    var pixels = stickyHeaderInfo.pixels + offset;
+    var parentIndex = stickyHeaderInfo.parentIndex;
+    if (parentIndex != null && !stickyHeaderInfo.overlapParent) {
+      pixels -= getDimension(getStickyHeaderInfo(parentIndex)?.size);
+    }
+    return pixels;
   }
 }
 

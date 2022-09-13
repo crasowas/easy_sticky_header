@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 /// See also:
 ///
 /// * [RenderStickyContainer], which creates a [StickyHeaderInfo] in callback.
+///
 /// * [StickyHeaderController], which handles the [StickyHeaderInfo] list.
 class StickyHeaderInfo {
   int index;
@@ -25,6 +26,10 @@ class StickyHeaderInfo {
 
   double stickyAmount;
 
+  int? parentIndex;
+
+  bool overlapParent;
+
   Widget widget;
 
   StickyHeaderInfo({
@@ -34,6 +39,23 @@ class StickyHeaderInfo {
     required this.pixels,
     required this.offset,
     this.stickyAmount = 0.0,
+    this.parentIndex,
+    this.overlapParent = false,
     required this.widget,
   });
+
+  @override
+  String toString() {
+    final List<String> description = <String>[
+      'index: $index',
+      'visible: $visible',
+      'size: $size',
+      'pixels: $pixels',
+      'offset: $offset',
+      'stickyAmount: $stickyAmount',
+      if (parentIndex != null) 'parentIndex: $parentIndex',
+      if (parentIndex != null) 'overlapParent: $overlapParent',
+    ];
+    return 'StickyHeaderInfo(${description.join(', ')})';
+  }
 }

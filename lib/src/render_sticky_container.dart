@@ -16,13 +16,15 @@ import 'sticky_header_info.dart';
 /// widget information through callback.
 class RenderStickyContainer extends RenderProxyBox {
   StickyHeaderController? _controller;
+  double? _pixelsCache;
+
   int index;
   bool visible;
   double? pixels;
   bool performancePriority;
+  int? parentIndex;
+  bool overlapParent;
   Widget widget;
-
-  double? _pixelsCache;
 
   RenderStickyContainer({
     required StickyHeaderController? controller,
@@ -30,6 +32,8 @@ class RenderStickyContainer extends RenderProxyBox {
     required this.visible,
     this.pixels,
     required this.performancePriority,
+    this.parentIndex,
+    required this.overlapParent,
     required this.widget,
   }) : _controller = controller;
 
@@ -82,8 +86,16 @@ class RenderStickyContainer extends RenderProxyBox {
     if (renderObject?.attached ?? false) {
       offset = localToGlobal(Offset.zero, ancestor: renderObject);
     }
+    // Using [ParentStickyContainerBuilder] may cause the offset to be a
+    // Not-a-Number value.
+    if (offset.dx.isNaN || offset.dy.isNaN) {
+      offset = const Offset(-1, -1);
+    }
     return offset;
   }
+
+  int? get _parentIndex =>
+      (parentIndex != null && (parentIndex ?? 0) < index) ? parentIndex : null;
 
   StickyHeaderInfo _callback() => StickyHeaderInfo(
         index: index,
@@ -91,6 +103,8 @@ class RenderStickyContainer extends RenderProxyBox {
         size: size,
         pixels: _pixels,
         offset: _offset,
+        parentIndex: _parentIndex,
+        overlapParent: overlapParent,
         widget: widget,
       );
 }

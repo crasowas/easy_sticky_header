@@ -12,7 +12,7 @@ import 'sticky_header_widget.dart';
 
 /// Sticky Header.
 ///
-/// Wrap a [ListView], [GridView], [CustomScrollView], [SingleChildScrollView]
+/// Wraps a [ListView], [GridView], [CustomScrollView], [SingleChildScrollView]
 /// or similar with this widget. Usually, as long as the wrapped widget is a
 /// scrolling widget, it can be used normally.
 ///
@@ -66,7 +66,7 @@ class StickyHeader extends StatefulWidget {
   /// a new controller.
   final StickyHeaderController? controller;
 
-  /// Optional [ScrollPosition].
+  /// Optional [ScrollController].
   ///
   /// If scroll controller is null, it will be obtained from inherited widget
   /// by default.
@@ -79,6 +79,7 @@ class StickyHeader extends StatefulWidget {
   /// Spacing between sticky header and start position.
   final double spacing;
 
+  /// Widget that support scrolling.
   final Widget child;
 
   const StickyHeader({
@@ -157,7 +158,7 @@ class _StickyHeaderState extends State<StickyHeader> {
               onNotification: (notification) {
                 // Abort if jumping to the header widget at the specified index
                 // is in progress.
-                controller.findingTargetInfo = null;
+                controller.isJumping = false;
                 return false;
               },
               child: widget.child,
@@ -171,7 +172,7 @@ class _StickyHeaderState extends State<StickyHeader> {
       );
     } else {
       // Ignore this return, this line of code will not be executed.
-      return Container();
+      return const _NullWidget();
     }
   }
 
@@ -202,4 +203,11 @@ class _StickyHeaderControllerWidget extends InheritedWidget {
   @override
   bool updateShouldNotify(_StickyHeaderControllerWidget oldWidget) =>
       controller != oldWidget.controller;
+}
+
+class _NullWidget extends Widget {
+  const _NullWidget();
+
+  @override
+  Element createElement() => throw UnimplementedError();
 }

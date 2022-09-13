@@ -12,7 +12,7 @@ import 'sticky_header_info.dart';
 
 /// Sticky Header Widget.
 ///
-/// Adjust the position and visibility of the widget in real time according to
+/// Adjusts the position and visibility of the widget in real time according to
 /// the scrolling changes, while covering the lower widget to achieve the effect
 /// of sticky header.
 class StickyHeaderWidget extends StatefulWidget {
@@ -32,31 +32,31 @@ class StickyHeaderWidget extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<StickyHeaderController>(
-        'controller', controller,
-        defaultValue: null));
     properties.add(DiagnosticsProperty<double>(
-        'currentPixels', controller.currentPixels,
+        'pixels', controller.currentPixels,
         defaultValue: 0.0));
     properties.add(DiagnosticsProperty<Offset>(
-        'currentOffset', controller.currentOffset,
+        'offset', controller.currentOffset,
         defaultValue: Offset.zero));
     properties.add(DiagnosticsProperty<StickyHeaderInfo>(
-        'currentStickyHeaderInfo', controller.currentStickyHeaderInfo,
+        'stickyHeaderInfo', controller.currentStickyHeaderInfo,
+        defaultValue: null));
+    properties.add(DiagnosticsProperty<StickyHeaderInfo>(
+        'childStickyHeaderInfo', controller.currentChildStickyHeaderInfo,
         defaultValue: null));
   }
 }
 
 class _StickyHeaderWidgetState extends State<StickyHeaderWidget>
     with SingleTickerProviderStateMixin {
-  late AnimationController animationController;
+  late AnimationController _animationController;
 
   @override
   void initState() {
     super.initState();
-    animationController = AnimationController.unbounded(vsync: this);
-    animationController.addListener(() {
-      widget.controller.scrollPosition?.jumpTo(animationController.value);
+    _animationController = AnimationController.unbounded(vsync: this);
+    _animationController.addListener(() {
+      widget.controller.scrollPosition?.jumpTo(_animationController.value);
     });
     widget.controller.addListener(_update);
   }
@@ -72,8 +72,8 @@ class _StickyHeaderWidgetState extends State<StickyHeaderWidget>
 
   @override
   void dispose() {
-    animationController.dispose();
     widget.controller.removeListener(_update);
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -85,12 +85,12 @@ class _StickyHeaderWidgetState extends State<StickyHeaderWidget>
       onPanEnd: _onPanEnd,
       child: Visibility(
         visible: stickyHeaderInfo != null && stickyHeaderInfo.visible,
-        child: _buildStickyHeaderWidget(stickyHeaderInfo),
+        child: _buildStickyHeader(stickyHeaderInfo),
       ),
     );
   }
 
-  Widget _buildStickyHeaderWidget(StickyHeaderInfo? stickyHeaderInfo) {
+  Widget _buildStickyHeader(StickyHeaderInfo? stickyHeaderInfo) {
     if (stickyHeaderInfo != null) {
       var isHorizontalAxis = widget.controller.isHorizontalAxis;
       var spacing = (widget.controller.isReverse ? -1 : 1) * widget.spacing;
@@ -138,7 +138,7 @@ class _StickyHeaderWidgetState extends State<StickyHeaderWidget>
       // In some cases, physical animation is not required, for example,
       // the velocity is already 0.0 at this time.
       if (simulation != null) {
-        animationController.animateWith(simulation);
+        _animationController.animateWith(simulation);
       }
     }
   }
