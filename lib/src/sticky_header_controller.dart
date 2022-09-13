@@ -36,12 +36,6 @@ class StickyHeaderController extends ChangeNotifier {
   final List<StickyHeaderInfoCallback> _stickyHeaderInfoCallbackList =
       <StickyHeaderInfoCallback>[];
 
-  /// When the default [ScrollController] is not used, the property value will
-  /// be set to false.
-  ///
-  /// Note that this property is only used internally, please do nothing.
-  bool useDefaultScrollPosition = true;
-
   /// When the value of the [useStickyAmount] property is set to true, the
   /// sticky amount of the header widget will be automatically calculated.
   ///
@@ -347,7 +341,7 @@ class StickyHeaderController extends ChangeNotifier {
   StickyHeaderInfo? getStickyHeaderInfo(int index) =>
       _stickyHeaderInfoMap[index];
 
-  /// Usually no need to call, this is called to avoid problems in some cases.
+  /// Clears the cache, please call when needed.
   void clearStickyHeaderInfo() => _stickyHeaderInfoMap.clear();
 
   /// Jumps to the header widget of the specified index. Compared with [jumpTo],
@@ -398,10 +392,9 @@ class StickyHeaderController extends ChangeNotifier {
       );
       var isForward = true;
       // Note that if [_stickyHeaderInfoMap] is empty, the current scrolling
-      // widget is considered to be at the starting position. If the
-      // [scrollController] or [reverse] properties of [StickyHeader] are
-      // dynamically updated, the [_stickyHeaderInfoMap] will be cleared,
-      // and the jump may fail.
+      // widget is considered to be at the starting position. When the [reverse]
+      // property of [StickyHeader] is updated, the [_stickyHeaderInfoMap] will
+      // be cleared, which may cause the jump to fail.
       if (_stickyHeaderInfoMap.isNotEmpty) {
         var stickyHeaderInfoList = _stickyHeaderInfoMap.values.toList();
         stickyHeaderInfoList.sort((a, b) => a.index.compareTo(b.index));

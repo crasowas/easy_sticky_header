@@ -66,12 +66,6 @@ class StickyHeader extends StatefulWidget {
   /// a new controller.
   final StickyHeaderController? controller;
 
-  /// Optional [ScrollController].
-  ///
-  /// If scroll controller is null, it will be obtained from inherited widget
-  /// by default.
-  final ScrollController? scrollController;
-
   /// This property must be set if the value of the [reverse] property
   /// needs to be changed dynamically. Usually set to null by default.
   final bool? reverse;
@@ -85,7 +79,6 @@ class StickyHeader extends StatefulWidget {
   const StickyHeader({
     Key? key,
     this.controller,
-    this.scrollController,
     this.reverse,
     this.spacing = 0.0,
     required this.child,
@@ -115,7 +108,6 @@ class _StickyHeaderState extends State<StickyHeader> {
   void initState() {
     super.initState();
     _controller = widget.controller ?? StickyHeaderController();
-    _setScrollPosition();
   }
 
   @override
@@ -125,10 +117,6 @@ class _StickyHeaderState extends State<StickyHeader> {
         widget.controller != null) {
       _controller?.dispose();
       _controller = widget.controller;
-      _setScrollPosition();
-    } else if (widget.scrollController != oldWidget.scrollController) {
-      _controller?.clearStickyHeaderInfo();
-      _setScrollPosition();
     } else if (widget.reverse != null &&
         widget.reverse != _controller?.isReverse) {
       _controller?.clearStickyHeaderInfo();
@@ -173,16 +161,6 @@ class _StickyHeaderState extends State<StickyHeader> {
     } else {
       // Ignore this return, this line of code will not be executed.
       return const _NullWidget();
-    }
-  }
-
-  void _setScrollPosition() {
-    if (widget.scrollController != null) {
-      _controller?.useDefaultScrollPosition = false;
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        _controller?.scrollPosition = widget.scrollController?.position;
-        _controller?.scrollListener();
-      });
     }
   }
 }
