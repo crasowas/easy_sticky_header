@@ -84,10 +84,10 @@ For more features, please go to the [example project](https://github.com/crasowa
 
 ## Screenshots
 
+||||
+|:---:|:---:|:---:|
 |![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot1.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot2.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot3.gif)|
-|:---:|:---:|:---:|
 |![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot4.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot5.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot6.gif)|
-|:---:|:---:|:---:|
 |![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot7.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot8.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot9.gif)|
 
 ## Contribution
