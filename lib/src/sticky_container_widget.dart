@@ -23,7 +23,7 @@ import 'sticky_header_info.dart';
 typedef HeaderWidgetBuilder = Widget Function(
     BuildContext context, double stickyAmount);
 
-/// Parent header widget update callback.
+/// Parent header update callback.
 ///
 /// Uses this callback when the content of the parent header widget changes. If
 /// the callback result is true, call [ParentHeaderWidgetBuilder] to rebuild the
@@ -31,7 +31,7 @@ typedef HeaderWidgetBuilder = Widget Function(
 ///
 /// This callback is used to reduce unnecessary rebuilds of the parent header
 /// widget and optimize performance.
-typedef ParentHeaderWidgetUpdateCallback = bool Function(
+typedef ParentHeaderUpdateCallback = bool Function(
     StickyHeaderInfo? childStickyHeaderInfo);
 
 /// Building header widget by group.
@@ -170,6 +170,9 @@ class StickyContainerWidget extends SingleChildRenderObjectWidget {
 ///
 /// An extension of [StickyContainerWidget] that supports dynamically building
 /// header widget by sticky amount.
+///
+/// If you find problems in use, please first confirm whether the
+/// [addAutomaticKeepAlives] property of the scroll widget has been set to true.
 class StickyContainerBuilder extends StatefulWidget {
   final int index;
 
@@ -200,7 +203,8 @@ class StickyContainerBuilder extends StatefulWidget {
   State<StickyContainerBuilder> createState() => _StickyContainerBuilderState();
 }
 
-class _StickyContainerBuilderState extends State<StickyContainerBuilder> {
+class _StickyContainerBuilderState extends State<StickyContainerBuilder>
+    with AutomaticKeepAliveClientMixin {
   StickyHeaderController? _controller;
   double _stickyAmount = 0.0;
 
@@ -212,6 +216,7 @@ class _StickyContainerBuilderState extends State<StickyContainerBuilder> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var controller = StickyHeader.of(context);
     if (controller != null && _controller != controller) {
       controller.useStickyAmount = true;
@@ -229,6 +234,12 @@ class _StickyContainerBuilderState extends State<StickyContainerBuilder> {
       child: widget.builder(context, _stickyAmount),
     );
   }
+
+  /// If there is too much spacing between the header widgets, the header widget
+  /// may be disposed prematurely, making it impossible to rebuild the header
+  /// widget with `stickyAmount`, so keep it active to avoid problems.
+  @override
+  bool get wantKeepAlive => true;
 
   void _update() {
     var stickyAmount =
@@ -260,7 +271,7 @@ class ParentStickyContainerBuilder extends StatefulWidget {
 
   final bool performancePriority;
 
-  final ParentHeaderWidgetUpdateCallback? callback;
+  final ParentHeaderUpdateCallback? onUpdate;
 
   final ParentHeaderWidgetBuilder builder;
 
@@ -270,7 +281,7 @@ class ParentStickyContainerBuilder extends StatefulWidget {
     this.visible = true,
     this.pixels,
     this.performancePriority = true,
-    this.callback,
+    this.onUpdate,
     required this.builder,
   }) : super(key: key);
 
@@ -284,6 +295,7 @@ class _ParentStickyContainerBuilderState
     with AutomaticKeepAliveClientMixin {
   StickyHeaderController? _controller;
   StickyHeaderInfo? _childStickyHeaderInfo;
+  double _stickyAmount = 0.0;
 
   @override
   void dispose() {
@@ -321,19 +333,20 @@ class _ParentStickyContainerBuilderState
     if (childStickyHeaderInfo == null) {
       if (_childStickyHeaderInfo != null) {
         _childStickyHeaderInfo = null;
+        _stickyAmount = 0.0;
         needsUpdate = true;
       }
     } else {
       if (childStickyHeaderInfo.parentIndex == widget.index &&
           (childStickyHeaderInfo.index != _childStickyHeaderInfo?.index ||
-              childStickyHeaderInfo.stickyAmount !=
-                  _childStickyHeaderInfo?.stickyAmount)) {
+              childStickyHeaderInfo.stickyAmount != _stickyAmount)) {
         _childStickyHeaderInfo = childStickyHeaderInfo;
+        _stickyAmount = childStickyHeaderInfo.stickyAmount;
         needsUpdate = true;
       }
     }
     if (needsUpdate &&
-        (widget.callback?.call(_childStickyHeaderInfo) ?? true)) {
+        (widget.onUpdate?.call(_childStickyHeaderInfo) ?? true)) {
       setState(() {});
     }
   }
