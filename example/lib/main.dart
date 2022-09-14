@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'examples/example0.dart';
 import 'examples/example1.dart';
 import 'examples/example10.dart';
+import 'examples/example11.dart';
+import 'examples/example12.dart';
 import 'examples/example2.dart';
 import 'examples/example3.dart';
 import 'examples/example4.dart';
@@ -28,6 +30,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Easy Sticky Header Demo'),
+      // showPerformanceOverlay: true,
     );
   }
 }
@@ -56,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
           physics: const AlwaysScrollableScrollPhysics(
             parent: BouncingScrollPhysics(),
           ),
-          itemCount: 100,
+          itemCount: 15,
           itemBuilder: (context, index) {
             if (index == 0) {
               return _buildHeader(index, 'Getting Started');
@@ -77,32 +80,40 @@ class _MyHomePageState extends State<MyHomePage> {
                   'Example 3 - Building header widget by sticky amount',
                   () => _push(context, const Example3()));
             } else if (index == 5) {
-              return _buildItem(index, 'Example 4 - Infinite list',
+              return _buildItem(
+                  index,
+                  'Example 4 - Scrolls to the top after the header widget is tapped',
                   () => _push(context, const Example4()));
             } else if (index == 6) {
-              return _buildItem(index, 'Example 5 - Multiple SliverList',
+              return _buildItem(
+                  index,
+                  'Example 5 - Jumps to the header widget of the specified index',
                   () => _push(context, const Example5()));
             } else if (index == 7) {
-              return _buildHeader(index, 'More features');
-            } else if (index == 8) {
-              return _buildItem(index, 'Example 6 - GridView',
+              return _buildItem(
+                  index,
+                  'Example 6 - Building header widget by group',
                   () => _push(context, const Example6()));
+            } else if (index == 8) {
+              return _buildHeader(index, 'More features');
             } else if (index == 9) {
-              return _buildItem(index, 'Example 7 - SingleChildScrollView',
+              return _buildItem(index, 'Example 7 - GridView',
                   () => _push(context, const Example7()));
             } else if (index == 10) {
-              return _buildItem(index, 'Example 8 - SliverPersistentHeader',
+              return _buildItem(index, 'Example 8 - CustomScrollView',
                   () => _push(context, const Example8()));
             } else if (index == 11) {
-              return _buildItem(
-                  index,
-                  'Example 9 - Scrolls to the top after the header widget is tapped',
+              return _buildItem(index, 'Example 9 - SingleChildScrollView',
                   () => _push(context, const Example9()));
             } else if (index == 12) {
-              return _buildItem(
-                  index,
-                  'Example 10 - Jumps to the header widget of the specified index',
+              return _buildItem(index, 'Example 10 - SliverPersistentHeader',
                   () => _push(context, const Example10()));
+            } else if (index == 13) {
+              return _buildItem(index, 'Example 11 - Multiple SliverList',
+                  () => _push(context, const Example11()));
+            } else if (index == 14) {
+              return _buildItem(index, 'Example 12 - Infinite list',
+                  () => _push(context, const Example12()));
             }
             return Container();
           },
@@ -118,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.only(left: 16.0),
           alignment: Alignment.centerLeft,
           width: double.infinity,
-          height: 45,
+          height: 50,
           child: Text(
             title,
             style: const TextStyle(
@@ -141,6 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 fontSize: 16,
               ),
             ),
+            visualDensity: const VisualDensity(vertical: 2),
             onTap: onTap,
           ),
           Divider(

@@ -46,7 +46,7 @@ class _Example0State extends State<Example0> {
                   height: 50,
                   child: Text(
                     index == 6
-                        ? 'Header #$index, not sticky example'
+                        ? 'Header #$index, non-sticky'
                         : 'Header #$index',
                     style: const TextStyle(
                       color: Colors.white,

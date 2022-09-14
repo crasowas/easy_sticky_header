@@ -24,7 +24,6 @@ class _Example2State extends State<Example2> {
         title: const Text('ScrollController with initialScrollOffset'),
       ),
       body: StickyHeader(
-        scrollController: _scrollController,
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(
             parent: BouncingScrollPhysics(),

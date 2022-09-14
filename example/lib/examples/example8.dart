@@ -13,28 +13,25 @@ class Example8 extends StatelessWidget {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.black,
-        title: const Text('SliverPersistentHeader'),
+        title: const Text('CustomScrollView'),
       ),
       body: StickyHeader(
-        spacing: 50,
         child: CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(
               parent: BouncingScrollPhysics()),
           slivers: <Widget>[
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: CustomDelegate(),
-            ),
-            // Temporarily only supports the layout of a header widget.
-            _buildHeaderWidget(1),
+            _buildHeader(0),
+            _buildSliverGrid(0),
+            _buildHeader(1),
             _buildSliverGrid(1),
+            _buildSliverList(1),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHeaderWidget(int index) => SliverToBoxAdapter(
+  Widget _buildHeader(int index) => SliverToBoxAdapter(
         child: StickyContainerWidget(
           index: index,
           child: Container(
@@ -54,6 +51,41 @@ class Example8 extends StatelessWidget {
         ),
       );
 
+  Widget _buildSliverList(int section) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          return Column(
+            children: <Widget>[
+              Container(
+                width: double.infinity,
+                height: 80,
+                color: Color.fromRGBO(Random().nextInt(256),
+                    Random().nextInt(256), Random().nextInt(256), 1),
+                padding: const EdgeInsets.only(left: 16),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'List Item #$section-$index',
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              Divider(
+                height: 1.0,
+                thickness: 1.0,
+                color: Colors.grey.shade200,
+                indent: 16.0,
+              ),
+            ],
+          );
+        },
+        childCount: 8,
+      ),
+    );
+  }
+
   Widget _buildSliverGrid(int section) => SliverGrid(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -70,7 +102,7 @@ class Example8 extends StatelessWidget {
               padding: const EdgeInsets.only(left: 16),
               alignment: Alignment.centerLeft,
               child: Text(
-                'Item #$section-$index',
+                'Grid Item #$section-$index',
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 16,
@@ -78,37 +110,7 @@ class Example8 extends StatelessWidget {
               ),
             );
           },
-          childCount: 10,
+          childCount: 4,
         ),
       );
-}
-
-class CustomDelegate extends SliverPersistentHeaderDelegate {
-  @override
-  double get maxExtent => 200;
-
-  @override
-  double get minExtent => 50;
-
-  @override
-  Widget build(
-          BuildContext context, double shrinkOffset, bool overlapsContent) =>
-      Container(
-        color: const Color.fromRGBO(0, 128, 255, 1.0),
-        padding: const EdgeInsets.only(left: 16.0),
-        alignment: Alignment.centerLeft,
-        child: const Text(
-          'SliverPersistentHeader',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-          ),
-        ),
-      );
-
-  @override
-  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
-    return maxExtent != oldDelegate.maxExtent ||
-        minExtent != oldDelegate.minExtent;
-  }
 }

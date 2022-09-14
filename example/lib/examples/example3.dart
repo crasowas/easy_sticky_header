@@ -33,7 +33,7 @@ class Example3 extends StatelessWidget {
                     width: double.infinity,
                     height: min(100, 50 + 5.0 * index),
                     child: Text(
-                      'Header #$index, do not use sticky amount',
+                      'Header #$index, not using stickyAmount',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -52,7 +52,7 @@ class Example3 extends StatelessWidget {
                     width: double.infinity,
                     height: min(100, 50 + 5.0 * index),
                     child: Text(
-                      'Header #$index',
+                      'Header #$index  stickyAmount：${stickyAmount.toStringAsFixed(2)}',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,

@@ -17,6 +17,8 @@ An easy-to-use and powerful sticky header for any widget that supports scrolling
 * Allow dynamic building of header widget and support custom transition animation
 * Header widget can dynamically change stickiness
 * Support for scrolling to the top after the header widget is tapped
+* Support jumping to the header widget of the specified index
+* Support header widget grouping
 * Support infinite list
 
 ## Usage
@@ -25,7 +27,7 @@ Add dependency:
 
 ```yaml
 dependencies:
-  easy_sticky_header: ^1.0.1
+  easy_sticky_header: ^1.0.3
 ```
 
 Import package:
@@ -78,13 +80,15 @@ class Example extends StatelessWidget {
 }
 ```
 
-For more features, please go to the [example project](./example) to see the details.
+For more features, please go to the [example project](https://github.com/crasowas/easy_sticky_header/blob/main/example) to see the details.
 
 ## Screenshots
 
-|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot1.png)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot2.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot3.gif)|
+|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot1.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot2.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot3.gif)|
 |:---:|:---:|:---:|
 |![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot4.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot5.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot6.gif)|
+|:---:|:---:|:---:|
+|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot7.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot8.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot9.gif)|
 
 ## Contribution
 

@@ -17,6 +17,8 @@
 * 允许动态构建头部组件，支持自定义过渡动画
 * 头部组件可以动态改变粘性
 * 支持点击头部组件后置顶
+* 支持跳转到指定索引的头部组件
+* 支持头部组件分组
 * 支持无限列表
 
 ## 用法
@@ -25,7 +27,7 @@
 
 ```yaml
 dependencies:
-  easy_sticky_header: ^1.0.1
+  easy_sticky_header: ^1.0.3
 ```
 
 导入包：
@@ -78,13 +80,15 @@ class Example extends StatelessWidget {
 }
 ```
 
-想了解更多功能请前往[示例项目](./example)查看详情。
+想了解更多功能请前往[示例项目](https://github.com/crasowas/easy_sticky_header/blob/main/example)查看详情。
 
 ## 截图
 
-|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot1.png)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot2.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot3.gif)|
+|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot1.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot2.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot3.gif)|
 |:---:|:---:|:---:|
 |![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot4.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot5.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot6.gif)|
+|:---:|:---:|:---:|
+|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot7.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot8.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot9.gif)|
 
 ## 贡献
 

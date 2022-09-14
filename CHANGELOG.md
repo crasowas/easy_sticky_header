@@ -1,3 +1,12 @@
+## 1.0.3
+* Improve debugging properties.
+* Fix the problem of pixels being inaccurate in some cases.
+* Update the feature of jumping to the specified header widget.
+* Add the grouping feature of the header widget.
+* Remove scrollController property.
+* Fix the problem that stickyAmount is invalid.
+* Update README and examples.
+
 ## 1.0.2
 * Update README.
 

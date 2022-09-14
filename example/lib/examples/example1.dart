@@ -47,7 +47,7 @@ class Example1 extends StatelessWidget {
                   child: Container(
                     color: Color.fromRGBO(Random().nextInt(256),
                         Random().nextInt(256), Random().nextInt(256), 1),
-                    padding: const EdgeInsets.only(left: 16.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 4),
                     alignment: Alignment.centerLeft,
                     width: 50,
                     child: Text(

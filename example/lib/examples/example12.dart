@@ -1,29 +1,8 @@
-import 'dart:math';
-
 import 'package:easy_sticky_header/easy_sticky_header.dart';
 import 'package:flutter/material.dart';
 
-class Example4 extends StatefulWidget {
-  const Example4({Key? key}) : super(key: key);
-
-  @override
-  State<Example4> createState() => _Example4State();
-}
-
-class _Example4State extends State<Example4> {
-  late final StickyHeaderController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = StickyHeaderController();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+class Example12 extends StatelessWidget {
+  const Example12({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,39 +11,28 @@ class _Example4State extends State<Example4> {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.black,
-        title:
-            const Text('Scrolls to the top after the header widget is tapped'),
+        title: const Text('Infinite list'),
       ),
       body: StickyHeader(
-        controller: _controller,
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(
             parent: BouncingScrollPhysics(),
           ),
-          itemCount: 100,
           itemBuilder: (context, index) {
-            if (index % 6 == 0) {
+            if (index % 3 == 0 && index < 6) {
               return StickyContainerWidget(
                 index: index,
-                child: GestureDetector(
-                  onTap: () {
-                    // Jumps without animation.
-                    // _controller.jumpTo(index);
-                    _controller.animateTo(index);
-                  },
-                  child: Container(
-                    color: Color.fromRGBO(Random().nextInt(256),
-                        Random().nextInt(256), Random().nextInt(256), 1),
-                    padding: const EdgeInsets.only(left: 16.0),
-                    alignment: Alignment.centerLeft,
-                    width: double.infinity,
-                    height: 50,
-                    child: Text(
-                      'Header #$index',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
+                child: Container(
+                  color: const Color.fromRGBO(255, 105, 0, 1.0),
+                  padding: const EdgeInsets.only(left: 16.0),
+                  alignment: Alignment.centerLeft,
+                  width: double.infinity,
+                  height: 50,
+                  child: Text(
+                    'Header #$index',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
                     ),
                   ),
                 ),
