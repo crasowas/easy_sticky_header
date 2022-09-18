@@ -10,6 +10,10 @@
 
 一个易用且功能强大的粘性头部组件库，适用于任何支持滚动的组件。
 
+## 介绍
+
+* [博客](https://blog.csdn.net/crasowas/article/details/126838153)
+
 ## 功能
 
 * 支持水平或垂直方向滚动的组件
@@ -84,11 +88,10 @@ class Example extends StatelessWidget {
 
 ## 截图
 
-||||
+|![screenshot1](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot1.gif)|![screenshot2](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot2.gif)|![screenshot3](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot3.gif)|
 |:---:|:---:|:---:|
-|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot1.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot2.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot3.gif)|
-|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot4.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot5.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot6.gif)|
-|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot7.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot8.gif)|![](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot9.gif)|
+|![screenshot4](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot4.gif)|![screenshot5](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot5.gif)|![screenshot6](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot6.gif)|
+|![screenshot7](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot7.gif)|![screenshot8](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot8.gif)|![screenshot9](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot9.gif)|
 
 ## 贡献
 
