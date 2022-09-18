@@ -23,7 +23,7 @@ typedef StickyHeaderInfoCallback = StickyHeaderInfo Function();
 class StickyHeaderController extends ChangeNotifier {
   ScrollPosition? _scrollPosition;
   bool _isJumping = false;
-  FindingTargetInfo? _findingTargetInfo;
+  _FindingTargetInfo? _findingTargetInfo;
 
   /// Cache of sticky headers information.
   ///
@@ -383,7 +383,7 @@ class StickyHeaderController extends ChangeNotifier {
         );
       }
     } else {
-      _findingTargetInfo = FindingTargetInfo(
+      _findingTargetInfo = _FindingTargetInfo(
         index: index,
         offset: offset,
         velocity: velocity,
@@ -477,14 +477,14 @@ class StickyHeaderController extends ChangeNotifier {
 }
 
 /// Finding Target Info.
-class FindingTargetInfo {
+class _FindingTargetInfo {
   int index;
   double offset;
   double velocity;
   Duration? duration;
   Curve? curve;
 
-  FindingTargetInfo({
+  _FindingTargetInfo({
     required this.index,
     required this.offset,
     required this.velocity,
