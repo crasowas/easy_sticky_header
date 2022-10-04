@@ -113,7 +113,6 @@ class StickyHeaderController extends ChangeNotifier {
     currentPixels = _scrollPosition?.pixels ?? 0.0;
     for (var callback in _stickyHeaderInfoCallbackList) {
       var stickyHeaderInfo = callback();
-      _correctOffset(stickyHeaderInfo);
       _stickyHeaderInfoMap[stickyHeaderInfo.index] = stickyHeaderInfo;
     }
     var stickyHeaderInfoList = _stickyHeaderInfoMap.values.toList();
@@ -172,28 +171,6 @@ class StickyHeaderController extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Corrects the deviation of offset.
-  ///
-  /// If left untreated, the sticky header widget and the header widget
-  /// will not fit together, and there will be gaps between the two, especially
-  /// when scrolling quickly and repeatedly.
-  void _correctOffset(StickyHeaderInfo stickyHeaderInfo) {
-    double deviation = 0.0;
-    if (isReverse) {
-      deviation =
-          (stickyHeaderInfo.pixels + getDimension(stickyHeaderInfo.size)) +
-              getComponent(stickyHeaderInfo.offset) -
-              currentPixels -
-              getViewportDimension;
-    } else {
-      deviation = currentPixels +
-          getComponent(stickyHeaderInfo.offset) -
-          stickyHeaderInfo.pixels;
-    }
-    stickyHeaderInfo.offset -=
-        isHorizontalAxis ? Offset(deviation, 0.0) : Offset(0.0, deviation);
-  }
-
   /// In some cases sticky header is not required,
   /// e.g. scroll events triggered by [BouncingScrollPhysics].
   bool _isNeedsStickyHeader(List<StickyHeaderInfo> stickyHeaderInfoList) =>
@@ -237,16 +214,16 @@ class StickyHeaderController extends ChangeNotifier {
   Offset _calculateOffset(StickyHeaderInfo stickyHeaderInfo,
       StickyHeaderInfo nextStickyHeaderInfo) {
     var d = 0.0;
-    // ±0.1: Which to reduce fluctuations and optimize the scrolling experience.
+    // ±0.2: Which to reduce fluctuations and optimize the scrolling experience.
     if (isReverse) {
       d = getComponent(nextStickyHeaderInfo.offset) +
           getDimension(nextStickyHeaderInfo.size);
-      d = d - 0.1;
+      d = d - 0.2;
       d = max(getViewportDimension - getDimension(stickyHeaderInfo.size), d);
     } else {
       d = getComponent(nextStickyHeaderInfo.offset) -
           getDimension(stickyHeaderInfo.size);
-      d = d + 0.1;
+      d = d + 0.2;
       d = min(0.0, d);
     }
     return isHorizontalAxis ? Offset(d, 0.0) : Offset(0.0, d);

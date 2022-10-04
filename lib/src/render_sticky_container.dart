@@ -80,18 +80,12 @@ class RenderStickyContainer extends RenderProxyBox {
   }
 
   Offset get _offset {
-    var renderObject = _controller?.scrollPosition?.context.notificationContext
-        ?.findRenderObject();
-    var offset = Offset.zero;
-    if (renderObject?.attached ?? false) {
-      offset = localToGlobal(Offset.zero, ancestor: renderObject);
+    var controller = _controller;
+    if (controller != null) {
+      var d = _pixels - controller.currentPixels;
+      return controller.isHorizontalAxis ? Offset(d, 0.0) : Offset(0.0, d);
     }
-    // Using [ParentStickyContainerBuilder] may cause the offset to be a
-    // Not-a-Number value.
-    if (offset.dx.isNaN || offset.dy.isNaN) {
-      offset = const Offset(-1, -1);
-    }
-    return offset;
+    return Offset.zero;
   }
 
   int? get _parentIndex =>
