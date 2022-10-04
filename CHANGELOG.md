@@ -1,3 +1,6 @@
+## 1.0.4
+* Optimize performance.
+
 ## 1.0.3
 * Improve debugging properties.
 * Fix the problem of pixels being inaccurate in some cases.
