@@ -1,6 +1,6 @@
 name: easy_sticky_header
 description: An easy-to-use and powerful sticky header for any widget that supports scrolling.
-version: 1.0.3
+version: 1.0.4
 homepage: https://github.com/crasowas/easy_sticky_header
 
 environment:

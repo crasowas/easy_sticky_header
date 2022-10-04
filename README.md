@@ -27,7 +27,7 @@ Add dependency:
 
 ```yaml
 dependencies:
-  easy_sticky_header: ^1.0.3
+  easy_sticky_header: ^1.0.4
 ```
 
 Import package:
