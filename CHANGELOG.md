@@ -1,3 +1,6 @@
+## 1.0.5
+* Fix issue caused by optimizing performance.
+
 ## 1.0.4
 * Optimize performance.
 
