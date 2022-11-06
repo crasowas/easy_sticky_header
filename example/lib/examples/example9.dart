@@ -1,6 +1,8 @@
 import 'package:easy_sticky_header/easy_sticky_header.dart';
 import 'package:flutter/material.dart';
 
+import '../test_config.dart';
+
 class Example9 extends StatelessWidget {
   const Example9({Key? key}) : super(key: key);
 
@@ -15,6 +17,7 @@ class Example9 extends StatelessWidget {
       ),
       body: StickyHeader(
         child: SingleChildScrollView(
+          reverse: TestConfig.reverse,
           physics: const AlwaysScrollableScrollPhysics(
               parent: BouncingScrollPhysics()),
           child: Column(

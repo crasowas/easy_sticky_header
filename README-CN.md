@@ -14,13 +14,12 @@
 
 * [博客](https://blog.csdn.net/crasowas/article/details/126838153)
 
-## 功能
+## 特性
 
 * 支持水平或垂直方向滚动的组件
 * 支持反向滚动的组件
 * 允许动态构建头部组件，支持自定义过渡动画
 * 头部组件可以动态改变粘性
-* 支持点击头部组件后置顶
 * 支持跳转到指定索引的头部组件
 * 支持头部组件分组
 * 支持无限列表
@@ -31,7 +30,7 @@
 
 ```yaml
 dependencies:
-  easy_sticky_header: ^1.0.4
+  easy_sticky_header: ^1.0.5
 ```
 
 导入包：

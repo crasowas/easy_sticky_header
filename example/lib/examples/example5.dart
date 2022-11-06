@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:easy_sticky_header/easy_sticky_header.dart';
 import 'package:flutter/material.dart';
 
+import '../test_config.dart';
+
 class Example5 extends StatefulWidget {
   const Example5({Key? key}) : super(key: key);
 
@@ -43,6 +45,7 @@ class _Example5State extends State<Example5> {
             child: StickyHeader(
               controller: _controller,
               child: ListView.builder(
+                reverse: TestConfig.reverse,
                 controller: _scrollController,
                 itemCount: 100,
                 itemBuilder: (context, index) {

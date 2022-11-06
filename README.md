@@ -16,7 +16,6 @@ An easy-to-use and powerful sticky header for any widget that supports scrolling
 * Support widget for reverse scrolling
 * Allow dynamic building of header widget and support custom transition animation
 * Header widget can dynamically change stickiness
-* Support for scrolling to the top after the header widget is tapped
 * Support jumping to the header widget of the specified index
 * Support header widget grouping
 * Support infinite list
@@ -27,7 +26,7 @@ Add dependency:
 
 ```yaml
 dependencies:
-  easy_sticky_header: ^1.0.4
+  easy_sticky_header: ^1.0.5
 ```
 
 Import package:
