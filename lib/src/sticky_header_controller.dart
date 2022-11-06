@@ -174,39 +174,20 @@ class StickyHeaderController extends ChangeNotifier {
   /// In some cases sticky header is not required,
   /// e.g. scroll events triggered by [BouncingScrollPhysics].
   bool _isNeedsStickyHeader(List<StickyHeaderInfo> stickyHeaderInfoList) =>
-      isReverse
-          ? currentPixels > 0
-          : getComponent(stickyHeaderInfoList.first.offset) < 0;
+      getComponent(stickyHeaderInfoList.first.offset) < 0;
 
   /// Returns true if the header widget is partially or completely invisible
   /// on the screen, false otherwise.
   ///
-  /// * For scrolling widget in the normal scrolling direction,
-  ///   determine whether the horizontal or vertical component of
-  ///   the offset of the header widget is less than 0.0.
-  ///
-  /// * For scrolling widget that reverse the scrolling direction,
-  ///   determine whether the header widget is partially or completely
-  ///   outside the [viewportDimension] range.
-  ///
-  /// * For grouped header widgets, additional processing is required if the
-  ///   child header widget and parent header widget do not overlap.
+  /// For grouped header widgets, additional processing is required if the child
+  /// header widget and parent header widget do not overlap.
   bool _isValidStickyHeader(StickyHeaderInfo stickyHeaderInfo) {
-    bool isValidStickyHeader = false;
     var value = 0.0;
     var parentIndex = stickyHeaderInfo.parentIndex;
     if (parentIndex != null && !stickyHeaderInfo.overlapParent) {
       value = getDimension(getStickyHeaderInfo(parentIndex)?.size);
     }
-    if (isReverse) {
-      isValidStickyHeader = getViewportDimension -
-              getDimension(stickyHeaderInfo.size) -
-              getComponent(stickyHeaderInfo.offset) <
-          value;
-    } else {
-      isValidStickyHeader = getComponent(stickyHeaderInfo.offset) < value;
-    }
-    return isValidStickyHeader;
+    return getComponent(stickyHeaderInfo.offset) < value;
   }
 
   /// Calculates the offset at which the header widget should stuck to
@@ -216,8 +197,7 @@ class StickyHeaderController extends ChangeNotifier {
     var d = 0.0;
     // ±0.2: Which to reduce fluctuations and optimize the scrolling experience.
     if (isReverse) {
-      d = getComponent(nextStickyHeaderInfo.offset) +
-          getDimension(nextStickyHeaderInfo.size);
+      d = getViewportDimension - getComponent(nextStickyHeaderInfo.offset);
       d = d - 0.2;
       d = max(getViewportDimension - getDimension(stickyHeaderInfo.size), d);
     } else {
@@ -253,16 +233,8 @@ class StickyHeaderController extends ChangeNotifier {
             !stickyHeaderInfo.overlapParent) {
           value = getDimension(currentStickyHeaderInfo?.size);
         }
-        if (isReverse) {
-          stickyAmount = (getViewportDimension -
-                  getComponent(stickyHeaderInfo.offset) -
-                  getDimension(stickyHeaderInfo.size) -
-                  value) /
-              getDimension(stickyHeaderInfo.size);
-        } else {
-          stickyAmount = (getComponent(stickyHeaderInfo.offset) - value) /
-              getDimension(stickyHeaderInfo.size);
-        }
+        stickyAmount = (getComponent(stickyHeaderInfo.offset) - value) /
+            getDimension(stickyHeaderInfo.size);
         stickyAmount = (1.0 - stickyAmount).clamp(0.0, 1.0);
       } else if ((currentChildStickyHeaderInfo == null &&
               stickyHeaderInfo == currentStickyHeaderInfo) ||
