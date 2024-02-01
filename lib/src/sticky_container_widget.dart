@@ -23,6 +23,13 @@ import 'sticky_header_info.dart';
 typedef HeaderWidgetBuilder = Widget Function(
     BuildContext context, double stickyAmount);
 
+/// Building scrollable header widget.
+///
+/// The header widget and the sticky header synchronize the scroll position
+/// through [ScrollController].
+typedef ScrollableHeaderWidgetBuilder = Widget Function(
+    BuildContext context, ScrollController scrollController);
+
 /// Parent header update callback.
 ///
 /// Uses this callback when the content of the parent header widget changes. If
@@ -174,18 +181,26 @@ class StickyContainerWidget extends SingleChildRenderObjectWidget {
 /// If you find problems in use, please first confirm whether the
 /// [addAutomaticKeepAlives] property of the scroll widget has been set to true.
 class StickyContainerBuilder extends StatefulWidget {
+  /// Mirror to [StickyContainerWidget.index]
   final int index;
 
+  /// Mirror to [StickyContainerWidget.visible]
   final bool visible;
 
+  /// Mirror to [StickyContainerWidget.pixels]
   final double? pixels;
 
+  /// Mirror to [StickyContainerWidget.performancePriority]
   final bool performancePriority;
 
+  /// Mirror to [StickyContainerWidget.parentIndex]
   final int? parentIndex;
 
+  /// Mirror to [StickyContainerWidget.overlapParent]
   final bool overlapParent;
 
+  /// The builder that creates a child to display in this widget, which will use
+  /// the provided `stickyAmount` to build the header widget.
   final HeaderWidgetBuilder builder;
 
   const StickyContainerBuilder({
@@ -251,6 +266,133 @@ class _StickyContainerBuilderState extends State<StickyContainerBuilder>
   }
 }
 
+/// Sticky Container Scrollable Builder.
+///
+/// An extension of [StickyContainerWidget] that supports building scrollable
+/// header widget.
+///
+/// If you find problems in use, please first confirm whether the
+/// [addAutomaticKeepAlives] property of the scroll widget has been set to true.
+class ScrollableStickyContainerBuilder extends StatefulWidget {
+  /// Mirror to [StickyContainerWidget.index]
+  final int index;
+
+  /// Mirror to [StickyContainerWidget.visible]
+  final bool visible;
+
+  /// Mirror to [StickyContainerWidget.pixels]
+  final double? pixels;
+
+  /// Mirror to [StickyContainerWidget.performancePriority]
+  final bool performancePriority;
+
+  /// Mirror to [StickyContainerWidget.parentIndex]
+  final int? parentIndex;
+
+  /// Mirror to [StickyContainerWidget.overlapParent]
+  final bool overlapParent;
+
+  /// See also [ScrollController.initialScrollOffset].
+  final double initialScrollOffset;
+
+  /// See also [ScrollController.keepScrollOffset].
+  final bool keepScrollOffset;
+
+  /// See also [ScrollController.debugLabel].
+  final String? debugLabel;
+
+  /// See also [ScrollController.onAttach].
+  final ScrollControllerCallback? onAttach;
+
+  /// See also [ScrollController.onDetach].
+  final ScrollControllerCallback? onDetach;
+
+  /// The builder that creates a child to display in this widget, which will use
+  /// the provided [ScrollController] to build the header widget.
+  final ScrollableHeaderWidgetBuilder builder;
+
+  const ScrollableStickyContainerBuilder({
+    Key? key,
+    required this.index,
+    this.visible = true,
+    this.pixels,
+    this.performancePriority = true,
+    this.parentIndex,
+    this.overlapParent = false,
+    this.initialScrollOffset = 0.0,
+    this.keepScrollOffset = true,
+    this.debugLabel,
+    this.onAttach,
+    this.onDetach,
+    required this.builder,
+  }) : super(key: key);
+
+  @override
+  State<ScrollableStickyContainerBuilder> createState() =>
+      _ScrollableStickyContainerBuilderState();
+}
+
+class _ScrollableStickyContainerBuilderState
+    extends State<ScrollableStickyContainerBuilder>
+    with AutomaticKeepAliveClientMixin {
+  bool _isSticking = false;
+  late ScrollController _scrollController;
+
+  Iterable<ScrollPosition> get _positions => _scrollController.positions;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController(
+      initialScrollOffset: widget.initialScrollOffset,
+      keepScrollOffset: widget.keepScrollOffset,
+      debugLabel: widget.debugLabel,
+      onAttach: (position) {
+        assert(_positions.length <= 2,
+            'ScrollController attached to multiple scroll views.');
+        _isSticking = _positions.length == 2;
+        if (_isSticking) {
+          position.correctPixels(_positions.first.pixels);
+        }
+        widget.onAttach?.call(position);
+      },
+      onDetach: (position) {
+        if (_isSticking) {
+          _positions.first.jumpTo(position.pixels);
+        }
+        _isSticking = false;
+        widget.onDetach?.call(position);
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return StickyContainerWidget(
+      index: widget.index,
+      visible: widget.visible,
+      pixels: widget.pixels,
+      performancePriority: widget.performancePriority,
+      parentIndex: widget.parentIndex,
+      overlapParent: widget.overlapParent,
+      child: widget.builder(context, _scrollController),
+    );
+  }
+
+  /// If there is too much spacing between the header widgets, the header widget
+  /// may be disposed prematurely, resulting in failure to synchronize the scroll
+  /// position, so keep it active to avoid problems.
+  @override
+  bool get wantKeepAlive => true;
+}
+
 /// Sticky Container Parent Builder.
 ///
 /// An extension of [StickyContainerWidget] for building parent header widget.
@@ -263,16 +405,24 @@ class _StickyContainerBuilderState extends State<StickyContainerBuilder>
 /// If you find problems in use, please first confirm whether the
 /// [addAutomaticKeepAlives] property of the scroll widget has been set to true.
 class ParentStickyContainerBuilder extends StatefulWidget {
+  /// Mirror to [StickyContainerWidget.index]
   final int index;
 
+  /// Mirror to [StickyContainerWidget.visible]
   final bool visible;
 
+  /// Mirror to [StickyContainerWidget.pixels]
   final double? pixels;
 
+  /// Mirror to [StickyContainerWidget.performancePriority]
   final bool performancePriority;
 
+  /// The callback should return false if the parent header widget does not
+  /// need to be rebuild.
   final ParentHeaderUpdateCallback? onUpdate;
 
+  /// The builder that creates a child to display in this widget, which will use
+  /// the provided [StickyHeaderInfo] to build the parent header widget.
   final ParentHeaderWidgetBuilder builder;
 
   const ParentStickyContainerBuilder({
