@@ -30,7 +30,7 @@
 
 ```yaml
 dependencies:
-  easy_sticky_header: ^1.0.5
+  easy_sticky_header: ^1.1.0
 ```
 
 导入包：

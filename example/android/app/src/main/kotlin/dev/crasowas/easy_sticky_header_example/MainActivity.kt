@@ -1,4 +1,4 @@
-package com.example.example
+package dev.crasowas.easy_sticky_header_example
 
 import io.flutter.embedding.android.FlutterActivity
 

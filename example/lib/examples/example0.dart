@@ -34,6 +34,36 @@ class _Example0State extends State<Example0> {
           itemCount: 100,
           itemBuilder: (context, index) {
             if (index % 3 == 0) {
+              if (index == 3) {
+                return ScrollableStickyContainerBuilder(
+                  index: index,
+                  builder: (context, scrollController) {
+                    return Container(
+                      color: Color.fromRGBO(Random().nextInt(256),
+                          Random().nextInt(256), Random().nextInt(256), 1),
+                      padding: const EdgeInsets.only(left: 16.0),
+                      alignment: Alignment.centerLeft,
+                      width: double.infinity,
+                      height: 50,
+                      child: ListView.builder(
+                        controller: scrollController,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 10,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            height: 50,
+                            alignment: Alignment.center,
+                            child: Text('Header #3-$index | ',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                )),
+                          );
+                        },
+                      ),
+                    );},
+                );
+              }
               return StickyContainerWidget(
                 index: index,
                 visible: index != 6,

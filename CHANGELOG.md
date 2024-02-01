@@ -1,5 +1,9 @@
+## 1.1.0
+* Add `ScrollableStickyContainerBuilder` for building scrollable header widget.
+* Update README and examples.
+
 ## 1.0.5
-* Fix issue caused by optimizing performance.
+* Fix an issue caused by optimizing performance.
 
 ## 1.0.4
 * Optimize performance.
