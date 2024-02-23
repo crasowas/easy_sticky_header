@@ -157,13 +157,8 @@ class StickyContainerWidget extends SingleChildRenderObjectWidget {
         controller != null,
         'Sticky header controller instance must not be null, '
         'confirm whether to use [StickyHeader] to wrap the widget.');
-    var scrollPosition = Scrollable.of(context)?.position;
-    assert(
-        scrollPosition != null,
-        'Scroll position instance must not be null, '
-        'confirm whether the widget wrapped by [StickyHeader] is scrollable.');
-    if (scrollPosition != null &&
-        controller?.scrollPosition != scrollPosition) {
+    var scrollPosition = Scrollable.of(context).position;
+    if (controller?.scrollPosition != scrollPosition) {
       controller?.scrollPosition = scrollPosition;
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         controller?.scrollListener();
