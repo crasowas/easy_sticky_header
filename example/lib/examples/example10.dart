@@ -15,6 +15,7 @@ class Example10 extends StatelessWidget {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
         title: const Text('SliverPersistentHeader'),
       ),
       body: StickyHeader(

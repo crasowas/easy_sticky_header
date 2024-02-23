@@ -23,6 +23,7 @@ class _Example2State extends State<Example2> {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
         title: const Text('ScrollController with initialScrollOffset'),
       ),
       body: StickyHeader(

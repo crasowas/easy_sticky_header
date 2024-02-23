@@ -13,6 +13,7 @@ class Example11 extends StatelessWidget {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
         title: const Text('Multiple SliverList'),
       ),
       body: StickyHeader(

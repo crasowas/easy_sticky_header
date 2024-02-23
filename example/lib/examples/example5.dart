@@ -37,6 +37,7 @@ class _Example5State extends State<Example5> {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
         title: const Text('Jumps to the header of the specified index'),
       ),
       body: Column(
@@ -106,7 +107,7 @@ class _Example5State extends State<Example5> {
                 _buildFloatingActionButton(33),
                 TextWidget(controller: _controller),
                 _buildFloatingActionButton(72),
-                _buildFloatingActionButton(93),
+                _buildFloatingActionButton(99),
               ],
             ),
           ),
@@ -117,6 +118,8 @@ class _Example5State extends State<Example5> {
 
   Widget _buildFloatingActionButton(int index) => FloatingActionButton(
         heroTag: index,
+        backgroundColor: Colors.blue,
+        shape: const CircleBorder(),
         onPressed: () {
           // If this just happens to jump to the header widget of
           // the specified index, the header widget doesn't become
@@ -125,7 +128,7 @@ class _Example5State extends State<Example5> {
           _controller.animateTo(
             index,
             offset: 0.5,
-            velocity: 1.5,
+            velocity: 5,
           );
         },
         child: Text(

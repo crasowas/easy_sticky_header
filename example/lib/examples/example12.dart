@@ -13,6 +13,7 @@ class Example12 extends StatelessWidget {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
         title: const Text('Infinite list'),
       ),
       body: StickyHeader(

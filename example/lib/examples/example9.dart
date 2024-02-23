@@ -13,6 +13,7 @@ class Example9 extends StatelessWidget {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
         title: const Text('SingleChildScrollView'),
       ),
       body: StickyHeader(

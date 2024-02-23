@@ -15,6 +15,7 @@ class Example7 extends StatelessWidget {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
         title: const Text('GridView'),
       ),
       body: StickyHeader(

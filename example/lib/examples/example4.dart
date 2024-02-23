@@ -34,6 +34,7 @@ class _Example4State extends State<Example4> {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
         title:
             const Text('Scrolls to the top after the header widget is tapped'),
       ),

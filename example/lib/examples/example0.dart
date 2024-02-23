@@ -20,6 +20,7 @@ class _Example0State extends State<Example0> {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
         title: const Text('Vertical scroll axis'),
       ),
       body: StickyHeader(
@@ -114,6 +115,8 @@ class _Example0State extends State<Example0> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue,
+        shape: const CircleBorder(),
         onPressed: () {
           setState(() {
             _reverse = !_reverse;

@@ -52,6 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
         title: Text(widget.title),
       ),
       body: StickyHeader(

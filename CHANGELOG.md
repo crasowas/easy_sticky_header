@@ -1,5 +1,9 @@
+## 1.1.1
+* Fix scroll position issue in `animateTo()` method ([#4](https://github.com/crasowas/easy_sticky_header/issues/4)).
+* Remove invalid null aware operator.
+
 ## 1.1.0
-* Add `ScrollableStickyContainerBuilder` for building scrollable header widget.
+* Add `ScrollableStickyContainerBuilder` for building scrollable header widget ([#3](https://github.com/crasowas/easy_sticky_header/issues/3)).
 * Update README and examples.
 
 ## 1.0.5

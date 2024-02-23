@@ -15,6 +15,7 @@ class Example3 extends StatelessWidget {
       appBar: AppBar(
         shadowColor: Colors.transparent,
         backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
         title: const Text('Building header widget by sticky amount'),
       ),
       body: StickyHeader(
