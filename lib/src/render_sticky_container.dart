@@ -71,9 +71,8 @@ class RenderStickyContainer extends RenderProxyBox {
       return pixels ?? 0.0;
     } else {
       if (_pixelsCache == null || !performancePriority) {
-        _pixelsCache = RenderAbstractViewport.of(this)
-            .getOffsetToReveal(this, 0.0)
-            .offset;
+        _pixelsCache =
+            RenderAbstractViewport.of(this).getOffsetToReveal(this, 0.0).offset;
       }
       return _pixelsCache ?? 0.0;
     }

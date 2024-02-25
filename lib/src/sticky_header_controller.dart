@@ -322,7 +322,8 @@ class StickyHeaderController extends ChangeNotifier {
   }) {
     var stickyHeaderInfo = getStickyHeaderInfo(index);
     if (stickyHeaderInfo != null) {
-      var pixels = min(getMaxScrollExtent, _calculatePixels(stickyHeaderInfo, offset));
+      var pixels =
+          min(getMaxScrollExtent, _calculatePixels(stickyHeaderInfo, offset));
       if (currentPixels != pixels) {
         isJumping = true;
         _scrollPosition?.animateTo(

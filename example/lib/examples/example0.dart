@@ -62,7 +62,8 @@ class _Example0State extends State<Example0> {
                           );
                         },
                       ),
-                    );},
+                    );
+                  },
                 );
               }
               return StickyContainerWidget(
