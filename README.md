@@ -81,6 +81,14 @@ class Example extends StatelessWidget {
 
 For more features, please go to the [example project](https://github.com/crasowas/easy_sticky_header/blob/main/example) to see the details.
 
+### Refresh StickyHeaderWidget
+
+If header content changes while not scrolling, you can refresh manually:
+
+```dart
+StickyHeader.of(context)?.refresh();
+```
+
 ## Screenshots
 
 |![screenshot1](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot1.gif)|![screenshot2](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot2.gif)|![screenshot3](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot3.gif)|

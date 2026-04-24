@@ -85,6 +85,14 @@ class Example extends StatelessWidget {
 
 想了解更多功能请前往[示例项目](https://github.com/crasowas/easy_sticky_header/blob/main/example)查看详情。
 
+### 刷新 StickyHeaderWidget
+
+在不滚动的情况下，如果头部内容发生了变化，可以手动触发刷新：
+
+```dart
+StickyHeader.of(context)?.refresh();
+```
+
 ## 截图
 
 |![screenshot1](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot1.gif)|![screenshot2](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot2.gif)|![screenshot3](https://github.com/crasowas/easy_sticky_header/raw/main/screenshots/screenshot3.gif)|
