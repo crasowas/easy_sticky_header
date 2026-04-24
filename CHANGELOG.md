@@ -1,3 +1,9 @@
+## 1.1.2
+* Fix sticky header getting stuck after very fast scrolling.
+* Fix stale sticky header state when list items change dynamically.
+* Fix sticky header child content not refreshing until scroll.
+* Add `refresh()` method to `StickyHeaderController`.
+
 ## 1.1.1
 * Fix scroll position issue in `animateTo()` method ([#4](https://github.com/crasowas/easy_sticky_header/issues/4)).
 * Remove invalid null aware operator.

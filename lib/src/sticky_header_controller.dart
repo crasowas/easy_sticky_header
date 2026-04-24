@@ -111,11 +111,13 @@ class StickyHeaderController extends ChangeNotifier {
   /// the sticky header widget based on the scroll position.
   void scrollListener() {
     currentPixels = _scrollPosition?.pixels ?? 0.0;
+    final activeStickyHeaderInfoList = <StickyHeaderInfo>[];
     for (var callback in _stickyHeaderInfoCallbackList) {
       var stickyHeaderInfo = callback();
+      activeStickyHeaderInfoList.add(stickyHeaderInfo);
       _stickyHeaderInfoMap[stickyHeaderInfo.index] = stickyHeaderInfo;
     }
-    var stickyHeaderInfoList = _stickyHeaderInfoMap.values.toList();
+    var stickyHeaderInfoList = activeStickyHeaderInfoList.toList();
     // Sort by index.
     stickyHeaderInfoList.sort((a, b) => a.index.compareTo(b.index));
     // Clear cache.
@@ -292,6 +294,13 @@ class StickyHeaderController extends ChangeNotifier {
 
   /// Clears the cache, please call when needed.
   void clearStickyHeaderInfo() => _stickyHeaderInfoMap.clear();
+
+  /// Refresh sticky header immediately.
+  ///
+  /// In some scenarios, such as dynamic content update, this can be used to
+  /// ensure that [StickyHeaderWidget] is refreshed without waiting for the next
+  /// scroll event.
+  void refresh() => scrollListener();
 
   /// Jumps to the header widget of the specified index. Compared with [jumpTo],
   /// a transition animation is added and it supports jumping to the header

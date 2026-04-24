@@ -17,25 +17,33 @@ import 'sticky_header_info.dart';
 class RenderStickyContainer extends RenderProxyBox {
   StickyHeaderController? _controller;
   double? _pixelsCache;
+  bool _isRefreshScheduled = false;
 
-  int index;
-  bool visible;
-  double? pixels;
-  bool performancePriority;
-  int? parentIndex;
-  bool overlapParent;
-  Widget widget;
+  int _index;
+  bool _visible;
+  double? _pixels;
+  bool _performancePriority;
+  int? _parentIndex;
+  bool _overlapParent;
+  Widget _widget;
 
   RenderStickyContainer({
     required StickyHeaderController? controller,
-    required this.index,
-    required this.visible,
-    this.pixels,
-    required this.performancePriority,
-    this.parentIndex,
-    required this.overlapParent,
-    required this.widget,
-  }) : _controller = controller;
+    required int index,
+    required bool visible,
+    double? pixels,
+    required bool performancePriority,
+    int? parentIndex,
+    required bool overlapParent,
+    required Widget widget,
+  }) : _controller = controller,
+        _index = index,
+        _visible = visible,
+        _pixels = pixels,
+        _performancePriority = performancePriority,
+        _parentIndex = parentIndex,
+        _overlapParent = overlapParent,
+        _widget = widget;
 
   set controller(StickyHeaderController? newController) {
     if (newController != null && _controller != newController) {
@@ -43,13 +51,81 @@ class RenderStickyContainer extends RenderProxyBox {
       _controller = newController;
       oldController?.removeCallback(_callback);
       newController.addCallback(_callback);
+      _scheduleRefresh();
     }
   }
+
+  set index(int newValue) {
+    if (_index != newValue) {
+      _index = newValue;
+      _pixelsCache = null;
+      _scheduleRefresh();
+    }
+  }
+
+  int get index => _index;
+
+  set visible(bool newValue) {
+    if (_visible != newValue) {
+      _visible = newValue;
+      _scheduleRefresh();
+    }
+  }
+
+  bool get visible => _visible;
+
+  set pixels(double? newValue) {
+    if (_pixels != newValue) {
+      _pixels = newValue;
+      _pixelsCache = null;
+      _scheduleRefresh();
+    }
+  }
+
+  double? get pixels => _pixels;
+
+  set performancePriority(bool newValue) {
+    if (_performancePriority != newValue) {
+      _performancePriority = newValue;
+      _pixelsCache = null;
+      _scheduleRefresh();
+    }
+  }
+
+  bool get performancePriority => _performancePriority;
+
+  set parentIndex(int? newValue) {
+    if (_parentIndex != newValue) {
+      _parentIndex = newValue;
+      _scheduleRefresh();
+    }
+  }
+
+  int? get parentIndex => _parentIndex;
+
+  set overlapParent(bool newValue) {
+    if (_overlapParent != newValue) {
+      _overlapParent = newValue;
+      _scheduleRefresh();
+    }
+  }
+
+  bool get overlapParent => _overlapParent;
+
+  set widget(Widget newValue) {
+    if (_widget != newValue) {
+      _widget = newValue;
+      _scheduleRefresh();
+    }
+  }
+
+  Widget get widget => _widget;
 
   @override
   void attach(PipelineOwner owner) {
     super.attach(owner);
     _controller?.addCallback(_callback);
+    _scheduleRefresh();
   }
 
   @override
@@ -63,7 +139,12 @@ class RenderStickyContainer extends RenderProxyBox {
     // Layout header widget.
     final childConstraints = constraints.loosen();
     child?.layout(childConstraints, parentUsesSize: true);
+    final oldSize = hasSize ? size : null;
     size = child?.size ?? Size.zero;
+    if (oldSize != size) {
+      _pixelsCache = null;
+      _scheduleRefresh();
+    }
   }
 
   double get _pixels {
@@ -100,4 +181,15 @@ class RenderStickyContainer extends RenderProxyBox {
         overlapParent: overlapParent,
         widget: widget,
       );
+
+  void _scheduleRefresh() {
+    if (_isRefreshScheduled) {
+      return;
+    }
+    _isRefreshScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _isRefreshScheduled = false;
+      _controller?.refresh();
+    });
+  }
 }
